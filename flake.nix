@@ -101,10 +101,6 @@
     lix.url = "https://git.lix.systems/lix-project/nixos-module/archive/2.93.0.tar.gz";
     lix.inputs.nixpkgs.follows = "nixpkgs";
 
-    # grub2 theme
-    grub2-themes.url = "github:vinceliuice/grub2-themes";
-    grub2-themes.inputs.nixpkgs.follows = "nixpkgs";
-
     # Home-manager
     hm.url = "github:nix-community/home-manager";
     hm.inputs.nixpkgs.follows = "nixpkgs";

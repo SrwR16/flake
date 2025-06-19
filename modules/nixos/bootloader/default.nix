@@ -1,21 +1,24 @@
+{ lib, ... }:
 {
   boot = {
     kernel.sysctl."net.isoc" = true;
     loader = {
-      grub2-theme = {
+      # Disable GRUB completely
+      grub.enable = lib.mkForce false;
+      grub2-theme.enable = lib.mkForce false;
+
+      # Enable systemd-boot
+      systemd-boot = {
         enable = true;
-        theme = "vimix";
-        footer = true;
+        configurationLimit = 15; # Keep last 15 generations
+        consoleMode = "auto";
+        editor = false; # Disable editing boot entries for security
       };
-      grub = {
-        enable = true;
-        useOSProber = true;
-        efiSupport = true;
-        device = "nodev";
+
+      efi = {
+        canTouchEfiVariables = true;
+        efiSysMountPoint = "/boot";
       };
-      #systemd-boot.enable = true;
-      efi.canTouchEfiVariables = true;
-      efi.efiSysMountPoint = "/boot";
     };
   };
 }
