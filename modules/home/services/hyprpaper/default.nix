@@ -22,11 +22,17 @@ in
       Unit = {
         Description = "Hyprland wallpaper daemon";
         PartOf = [ "graphical-session.target" ];
+        After = [ "graphical-session.target" ];
+        Requisite = [ "graphical-session.target" ];
       };
 
       Service = {
         ExecStart = "${lib.getExe pkgs.hyprpaper}";
         Restart = "on-failure";
+        RestartSec = "2";
+        Environment = [
+          "WAYLAND_DISPLAY=wayland-1"
+        ];
       };
 
       Install.WantedBy = [ "graphical-session.target" ];

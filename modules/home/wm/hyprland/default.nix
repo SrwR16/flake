@@ -109,6 +109,7 @@ in
         grim
         gtk3
         hyprpicker
+        hyprpaper
         libcanberra-gtk3
         libnotify
         pamixer
