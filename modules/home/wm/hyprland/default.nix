@@ -149,11 +149,11 @@ in
       package = null;
       portalPackage = null;
       systemd = {
-        enable = false;
-        # extraCommands = lib.mkBefore [
-        #   "systemctl --user stop graphical-session.target"
-        #   "systemctl --user start hyprland-session.target"
-        # ];
+        enable = true;
+        variables = [ "--all" ];
+        extraCommands = [
+          "systemctl --user start graphical-session.target"
+        ];
       };
     };
 

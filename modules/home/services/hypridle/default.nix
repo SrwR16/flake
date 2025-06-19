@@ -16,9 +16,10 @@ in
       enable = true;
       settings = {
         general = {
-          lock_cmd = "hyprlock";
+          lock_cmd = "pidof hyprlock || hyprlock";
           before_sleep_cmd = "loginctl lock-session";
           after_sleep_cmd = "hyprctl dispatch dpms on";
+          ignore_dbus_inhibit = false;
         };
 
         listener = [
@@ -29,7 +30,7 @@ in
           }
           {
             timeout = 600;
-            on-timeout = "hyprlock";
+            on-timeout = "loginctl lock-session";
           }
           {
             timeout = 1800;

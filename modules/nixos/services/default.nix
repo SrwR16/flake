@@ -45,24 +45,21 @@ in
         glib-networking.enable = true;
       };
 
-      # greetd = mkIf config.meadow.programs.wayland.enable {
-      #   enable = true;
-      #   settings = {
-      #     terminal.vt = 1;
-      #     default_session = {
-      #       command = concatStringsSep " " [
-      #         (getExe pkgs.greetd.tuigreet)
-      #         "--time"
-      #         "--remember"
-      #         "--remember-user-session"
-      #         "--asterisks"
-      #         "--sessions 'hyprland'"
-      #         "--cmd 'hyprland'"
-      #       ];
-      #       user = "greeter";
-      #     };
-      #   };
-      # };
+      greetd = mkIf config.meadow.programs.wayland.enable {
+        enable = true;
+        settings = {
+          terminal.vt = 1;
+          default_session = {
+            command = "uwsm start default";
+            user = "sarw";
+          };
+          # Auto-login configuration
+          initial_session = {
+            command = "uwsm start default";
+            user = "sarw";
+          };
+        };
+      };
     };
   };
 }
