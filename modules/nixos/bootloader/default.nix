@@ -5,7 +5,6 @@
     loader = {
       # Disable GRUB completely
       grub.enable = lib.mkForce false;
-      grub2-theme.enable = lib.mkForce false;
 
       # Enable systemd-boot
       systemd-boot = {
