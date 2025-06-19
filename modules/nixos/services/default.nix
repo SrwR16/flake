@@ -1,6 +1,7 @@
 {
   lib,
   config,
+  pkgs,
   ...
 }:
 let
@@ -50,13 +51,8 @@ in
         settings = {
           terminal.vt = 1;
           default_session = {
-            command = "uwsm start default";
-            user = "sarw";
-          };
-          # Auto-login configuration
-          initial_session = {
-            command = "uwsm start default";
-            user = "sarw";
+            command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --remember --remember-user-session --asterisks --cmd 'uwsm start default'";
+            user = "greeter";
           };
         };
       };
