@@ -16,7 +16,7 @@ in
     stateVersion = "24.11";
 
     packages = with pkgs; [
-      inputs.zen-browser.packages.${system}.default
+      #inputs.zen-browser.packages.${system}.default
 
       app2unit
       asciinema_3
