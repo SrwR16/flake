@@ -1,6 +1,6 @@
 ---
 keys:
-  - &sarw age1gqkpvcczyezrcq5dterejspewfv443awwynuf48rgql48c4y34xsmdjp4z
+  - &sarw age1r6wsle7rqefqla07fyxdwuasrxp3j50xxpzdhg8087r3qamsrsms856uy3
   - &mithrix age1sklfnht5lgc9psmrzrujapfhyclzc72argvk4hya67u3cdtag58smg0vhq
 creation_rules:
   - path_regex: secrets/sarw/[^/]+\.(yaml|json|env|ini)$

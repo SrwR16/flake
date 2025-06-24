@@ -34,7 +34,7 @@
 
     services = {
       hyprlock.enable = true;
-      ags.enable = false;
+      ags.enable = true;
       cliphist.enable = true;
       hypridle.enable = true;
       hyprpaper.enable = true;
@@ -58,12 +58,13 @@
   home = {
     packages = with pkgs; [
       android-tools
-      lunar-client
       scrcpy
       stremio
       equicord
       wdisplays
       yazi
+      # Archive extraction tools for file manager
+      file-roller
       # affine
     ];
   };

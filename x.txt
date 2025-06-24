@@ -1,0 +1,45 @@
+  sudo nixos-rebuild switch --flake .#grovetender
+building the system configuration...
+activating the configuration...
+warning: password file ‘/persist/passwords/user’ does not exist
+=== diff to current-system ===
+<<< /run/current-system
+>>> /nix/store/27s6308fs7r6rhhni87xdbwjjcm9d6q6-nixos-system-grovetender-25.11.20250621.4206c4c
+
+No differences found.
+=== end of the system diff ===
+setting up /etc...
+warning: /root/.nix-defexpr/channels exists, but channels have been disabled.
+warning: /nix/var/nix/profiles/per-user/root/channels exists, but channels have been disabled.
+warning: /root/.nix-defexpr/channels exists, but channels have been disabled.
+warning: /home/sarw/.nix-defexpr/channels exists, but channels have been disabled.
+Due to https://github.com/NixOS/nix/issues/9574, Nix may still use these channels when NIX_PATH is unset.
+Delete the above directory or directories to prevent this.
+reloading user units for sarw...
+restarting sysinit-reactivation.target
+the following new units were started: NetworkManager-dispatcher.service, sysinit-reactivation.target, systemd-tmpfiles-resetup.service
+warning: the following units failed: home-manager-sarw.service
+× home-manager-sarw.service - Home Manager environment for sarw
+     Loaded: loaded (/etc/systemd/system/home-manager-sarw.service; enabled; preset: ignored)
+     Active: failed (Result: exit-code) since Tue 2025-06-24 16:55:47 CEST; 268ms ago
+ Invocation: 9c5be5f4e9de46b3b78c756e7b08d7f9
+    Process: 3321 ExecStart=/nix/store/mn5h375vq2h22qgxdzp6490cy33za3hq-hm-setup-env /nix/store/n3c1j91cvj9cskslh6iix37zxs84gs3m-home-manager-generation (code=exited, status=1/FAILURE)
+   Main PID: 3321 (code=exited, status=1/FAILURE)
+         IP: 0B in, 0B out
+         IO: 1.7M read, 0B written
+   Mem peak: 6.4M
+        CPU: 1.269s
+
+juin 24 16:55:46 grovetender hm-activate-sarw[4002]: Attempting to continue anyway...
+juin 24 16:55:46 grovetender hm-activate-sarw[4002]: Starting units: sops-nix.service
+juin 24 16:55:47 grovetender hm-activate-sarw[4002]: sops-nix.service failed
+juin 24 16:55:47 grovetender hm-activate-sarw[3321]: Activating sops-nix
+juin 24 16:55:47 grovetender systemctl[4026]: Job for sops-nix.service failed because the control process exited with error code.
+juin 24 16:55:47 grovetender systemctl[4026]: See "systemctl --user status sops-nix.service" and "journalctl --user -xeu sops-nix.service" for details.
+juin 24 16:55:47 grovetender systemd[1]: home-manager-sarw.service: Main process exited, code=exited, status=1/FAILURE
+juin 24 16:55:47 grovetender systemd[1]: home-manager-sarw.service: Failed with result 'exit-code'.
+juin 24 16:55:47 grovetender systemd[1]: Failed to start Home Manager environment for sarw.
+juin 24 16:55:47 grovetender systemd[1]: home-manager-sarw.service: Consumed 1.269s CPU time, 6.4M memory peak, 1.7M read from disk.
+Command '['systemd-run', '-E', 'LOCALE_ARCHIVE', '-E', 'NIXOS_INSTALL_BOOTLOADER', '--collect', '--no-ask-password', '--pipe', '--quiet', '--service-type=exec', '--unit=nixos-rebuild-switch-to-configuration', PosixPath('/nix/store/27s6308fs7r6rhhni87xdbwjjcm9d6q6-nixos-system-grovetender-25.11.20250621.4206c4c/bin/switch-to-configuration'), 'switch']' returned non-zero exit status 4.
+…~/flake                                                                                                                                                                            main ~2   13s
+
