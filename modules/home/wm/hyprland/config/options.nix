@@ -95,13 +95,13 @@
       kb_layout = "us";
       kb_options = "compose:rctrl,caps:escape";
 
-      accel_profile = "flat";
+      accel_profile = "adaptive";
       follow_mouse = 1;
 
       touchpad = {
         disable_while_typing = true;
         natural_scroll = true;
-        scroll_factor = 1;
+        scroll_factor = 2.0;
       };
     };
 
