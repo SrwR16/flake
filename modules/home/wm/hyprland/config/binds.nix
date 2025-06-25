@@ -93,6 +93,7 @@ in
 
           # Utilities
           "SUPER, Return, exec, run-as-service ${terminal}"
+          "SUPER, B, exec, systemctl --user is-active --quiet hyprshell-bar.service && systemctl --user stop hyprshell-bar.service || systemctl --user start hyprshell-bar.service"
           "SUPERSHIFT, Z, exec, ${getExe zellij-attach}"
           "SUPER, O, exec, run-as-service wl-ocr"
 
@@ -105,7 +106,7 @@ in
 
       bindr = [
         # Launchers
-        " SUPER, D, exec, ${pkgs.rofi}/bin/rofi  -no-lazy-grab -show drun -modi drun -no-fixed-num-lines -lines 5 -theme ~/.config/rofi/config.rasi"
+        #" SUPER, D, exec, ${pkgs.rofi}/bin/rofi  -no-lazy-grab -show drun -modi drun -no-fixed-num-lines -lines 5 -theme ~/.config/rofi/config.rasi"
         " SUPERSHIFT, p, exec, rofi-rbw --no-help --clipboarder wl-copy --keybindings Alt+x:type:password "
         " SUPERSHIFT, e, exec, bemoji -t "
         " SUPERSHIFT, o, exec, wezterm start --class clipse clipse "
