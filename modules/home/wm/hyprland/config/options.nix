@@ -13,8 +13,6 @@
       # Ensure session management works properly
       "systemctl --user start graphical-session.target"
       "sleep 2 && hyprctl dispatch dpms on"
-      # Start caelestia shell (quickshell/hyprshell) from local repo
-      "/home/sarw/hyprshell/run.fish"
     ];
     animations = {
       enabled = true;
