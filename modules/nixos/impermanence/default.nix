@@ -22,12 +22,12 @@ in
         "/etc/NetworkManager/system-connections"
         "/etc/secureboot"
         "/var/db/sudo"
+        "/var/lib/tailscale"
         "/var/lib/nixos"
       ];
       files = [
         "/etc/machine-id"
         "/etc/wg.key"
-        # "/tmp/style.css"
       ];
     };
   };
