@@ -26,11 +26,11 @@ in
            hold-time 200
           )
           (defalias
-           caps (tap-hold 100 100 esc lctl)
+           caps caps
           )
 
           (deflayer base
-           @caps
+           caps
           )
         '';
       };

@@ -116,6 +116,7 @@ in
 
           "beacon.enabled" = false; # No bluetooth location BS in my webbrowser please
           "device.sensors.enabled" = false; # This isn't a phone
+          "geo.enabled" = false; # Disable geolocation alltogether
 
           # ESNI is deprecated ECH is recommended
           "network.dns.echconfig.enabled" = true;
@@ -372,6 +373,7 @@ in
 
           "beacon.enabled" = false; # No bluetooth location BS in my webbrowser please
           "device.sensors.enabled" = false; # This isn't a phone
+          "geo.enabled" = false; # Disable geolocation alltogether
 
           # ESNI is deprecated ECH is recommended
           "network.dns.echconfig.enabled" = true;
