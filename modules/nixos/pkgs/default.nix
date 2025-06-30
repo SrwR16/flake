@@ -72,6 +72,7 @@ in
       yaml-language-server
       yq
       vscode-fhs
+      code-cursor
     ];
   };
 }
