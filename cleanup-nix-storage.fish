@@ -10,12 +10,7 @@ echo "Analyzing current storage usage..."
 set nix_store_size (du -sh /nix/store 2>/dev/null | cut -f1 || echo "Unknown")
 
 # Count Home Manager generations
-set hm_profile_path ~/.local/state/nix/profiles/home-manager
-if test -d $hm_profile_path
-    set hm_generations (ls $hm_profile_path-*-link 2>/dev/null | wc -l)
-else
-    set hm_generations 0
-end
+set hm_generations (home-manager generations | wc -l)
 
 # Count system generations
 set sys_generations (sudo nix-env --list-generations -p /nix/var/nix/profiles/system 2>/dev/null | wc -l || echo "0")
@@ -51,23 +46,30 @@ function confirm
 end
 
 echo "=== STEP 1: Clean up old Home Manager generations ==="
-if test $hm_generations -gt 10
-    echo "Found $hm_generations generations - keeping only the last 10"
-    if confirm "Remove old Home Manager generations"
+if test $hm_generations -gt 3
+    echo "Found $hm_generations generations - keeping only the last 3"
+    if confirm "Remove old Home Manager generations (keep last 3)"
         echo "Removing old Home Manager generations..."
-        home-manager expire-generations "-10 days"
-        # Alternative: keep only last 5 generations
-        # nix-env --delete-generations +5 -p ~/.local/state/nix/profiles/home-manager
+        # Use generation number-based cleanup instead of time-based
+        nix-env --delete-generations +3 -p ~/.local/state/nix/profiles/home-manager
         echo "✅ Old Home Manager generations removed"
     end
-else if test $hm_generations -gt 0
-    echo "Found $hm_generations generations - this is already reasonable"
-    if confirm "Still want to clean Home Manager generations"
-        home-manager expire-generations "-30 days"
+else if test $hm_generations -gt 2
+    echo "Found $hm_generations generations - keeping only the last 2"
+    if confirm "Remove old Home Manager generations (keep last 2)"
+        echo "Removing old Home Manager generations..."
+        nix-env --delete-generations +2 -p ~/.local/state/nix/profiles/home-manager
+        echo "✅ Home Manager generations removed"
+    end
+else if test $hm_generations -gt 1
+    echo "Found $hm_generations generations - keeping only the current generation"
+    if confirm "Remove old Home Manager generations (keep last 1)"
+        echo "Removing old Home Manager generations..."
+        nix-env --delete-generations +1 -p ~/.local/state/nix/profiles/home-manager
         echo "✅ Home Manager generations cleaned"
     end
 else
-    echo "No Home Manager generations found - skipping"
+    echo "Only $hm_generations Home Manager generation found - nothing to clean"
 end
 
 echo ""
@@ -96,24 +98,39 @@ end
 
 echo ""
 echo "=== STEP 3: System generations cleanup ==="
-if test $sys_generations -gt 10
-    echo "Found $sys_generations system generations - cleaning old ones"
-    if confirm "Clean old system generations (keep last 5)"
+if test $sys_generations -gt 3
+    echo "Found $sys_generations system generations - keeping only the last 3"
+    if confirm "Clean old system generations (keep last 3)"
         echo "Cleaning old system generations..."
-        sudo nix-collect-garbage --delete-older-than 30d
+        sudo nix-env --delete-generations +3 -p /nix/var/nix/profiles/system
         echo "✅ Old system generations cleaned"
     end
-else
-    echo "Found $sys_generations system generations - this is reasonable"
-    if confirm "Still want to clean system generations"
+else if test $sys_generations -gt 2
+    echo "Found $sys_generations system generations - keeping only the last 2"
+    if confirm "Clean system generations (keep last 2)"
         echo "Cleaning old system generations..."
-        sudo nix-collect-garbage --delete-older-than 30d
+        sudo nix-env --delete-generations +2 -p /nix/var/nix/profiles/system
+        echo "✅ System generations cleaned"
+    end
+else
+    echo "Found $sys_generations system generations - this is already minimal"
+    if confirm "Still want to clean system generations (keep last 1)"
+        echo "Cleaning old system generations..."
+        sudo nix-env --delete-generations +1 -p /nix/var/nix/profiles/system
         echo "✅ System generations cleaned"
     end
 end
 
+echo "=== STEP 4: Clean up boot entries ==="
+echo "Cleaning old boot entries (this helps free system generations)"
+if confirm "Clean old boot entries"
+    echo "Cleaning old boot entries..."
+    sudo /run/current-system/bin/switch-to-configuration boot
+    echo "✅ Boot entries cleaned"
+end
+
 echo ""
-echo "=== STEP 4: Clean direnv cache ==="
+echo "=== STEP 5: Clean direnv cache ==="
 if test -d ~/.cache/direnv
     set direnv_size (du -sh ~/.cache/direnv 2>/dev/null | cut -f1 || echo "Unknown")
     echo "Found direnv cache: $direnv_size"
@@ -127,8 +144,7 @@ else
 end
 
 echo ""
-echo "=== STEP 5: Run garbage collection ==="
-echo "=== STEP 5: Run garbage collection ==="
+echo "=== STEP 6: Run garbage collection ==="
 echo "This will remove all unreferenced store paths"
 if confirm "Run full garbage collection"
     echo "Running garbage collection..."
@@ -137,7 +153,7 @@ if confirm "Run full garbage collection"
 end
 
 echo ""
-echo "=== STEP 6: Optimize Nix store ==="
+echo "=== STEP 7: Optimize Nix store ==="
 echo "This will deduplicate identical files in the store"
 if confirm "Optimize Nix store (may take a while)"
     echo "Optimizing Nix store..."
@@ -153,7 +169,7 @@ echo "Previous size: $nix_store_size"
 echo "Current size:  $new_nix_store_size"
 
 # Count remaining generations
-set new_hm_generations (ls ~/.local/state/nix/profiles/home-manager-*-link 2>/dev/null | wc -l)
+set new_hm_generations (home-manager generations | wc -l)
 set new_sys_generations (sudo nix-env --list-generations -p /nix/var/nix/profiles/system 2>/dev/null | wc -l || echo "0")
 
 echo ""

@@ -8,13 +8,12 @@ echo ""
 set nix_store_size (du -sh /nix/store 2>/dev/null | cut -f1 || echo "Unknown")
 
 # Count Home Manager generations
-set hm_profile_path ~/.local/state/nix/profiles/home-manager
-if test -d $hm_profile_path
-    set hm_generations (ls $hm_profile_path-*-link 2>/dev/null | wc -l)
-    set hm_oldest (ls $hm_profile_path-*-link 2>/dev/null | head -1 | sed 's/.*home-manager-\([0-9]*\)-link/\1/')
-    set hm_newest (ls $hm_profile_path-*-link 2>/dev/null | tail -1 | sed 's/.*home-manager-\([0-9]*\)-link/\1/')
+set hm_generations (home-manager generations | wc -l)
+if test $hm_generations -gt 0
+    set hm_generations_list (home-manager generations)
+    set hm_oldest (echo $hm_generations_list | head -1 | awk '{print $6}' | cut -d'/' -f5 | cut -d'-' -f4)
+    set hm_newest (echo $hm_generations_list | tail -1 | awk '{print $6}' | cut -d'/' -f5 | cut -d'-' -f4)
 else
-    set hm_generations 0
     set hm_oldest "N/A"
     set hm_newest "N/A"
 end
@@ -105,14 +104,32 @@ if test $flake_inputs_count -gt 0
 end
 
 if test $hm_generations -gt 10
-    echo "2. 🥈 Remove old Home Manager generations (keeping last 10):"
-    echo "   home-manager expire-generations '-30 days'"
+    echo "2. 🥈 Remove old Home Manager generations (keeping last 5):"
+    echo "   nix-env --delete-generations +5 -p ~/.local/state/nix/profiles/home-manager"
+    echo ""
+else if test $hm_generations -gt 5
+    echo "2. 🥈 Remove old Home Manager generations (keeping last 3):"
+    echo "   nix-env --delete-generations +3 -p ~/.local/state/nix/profiles/home-manager"
+    echo ""
+else if test $hm_generations -gt 3
+    echo "2. 🥈 Remove old Home Manager generations (keeping last 2):"
+    echo "   nix-env --delete-generations +2 -p ~/.local/state/nix/profiles/home-manager"
     echo ""
 end
 
 echo "3. 🥉 Run garbage collection:"
 echo "   nix-collect-garbage -d"
 echo ""
+
+if test $sys_generations -gt 10
+    echo "4. 🧹 Clean old system generations (keep last 5):"
+    echo "   sudo nix-env --delete-generations +5 -p /nix/var/nix/profiles/system"
+    echo ""
+else if test $sys_generations -gt 5
+    echo "4. 🧹 Clean old system generations (keep last 3):"
+    echo "   sudo nix-env --delete-generations +3 -p /nix/var/nix/profiles/system"
+    echo ""
+end
 
 if test "$direnv_cache_size" != "0"
     echo "4. 🧹 Clear direnv cache ($direnv_cache_size):"
