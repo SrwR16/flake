@@ -93,7 +93,7 @@
 
     input = {
       kb_layout = "us";
-      kb_options = "compose:rctrl,caps:escape";
+      kb_options = "compose:rctrl";
 
       accel_profile = "adaptive";
       follow_mouse = 1;

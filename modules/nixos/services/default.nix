@@ -34,7 +34,7 @@ in
         layout = "us";
       };
 
-      xserver.xkb.options = "compose:rctrl,caps:escape";
+      xserver.xkb.options = "compose:rctrl";
 
       pipewire = mkIf config.meadow.services.pipewire.enable {
         enable = true;
