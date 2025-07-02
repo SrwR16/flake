@@ -19,18 +19,15 @@ in
         extraDefCfg = "process-unmapped-keys yes";
         config = ''
           (defsrc
-           caps
           )
           (defvar
            tap-time 150
            hold-time 200
           )
           (defalias
-           caps caps
           )
 
           (deflayer base
-           caps
           )
         '';
       };

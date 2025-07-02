@@ -23,6 +23,7 @@ in
         "/etc/secureboot"
         "/var/db/sudo"
         "/var/lib/tailscale"
+        "/var/lib/nixos"
       ];
       files = [
         "/etc/machine-id"
