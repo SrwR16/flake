@@ -9,7 +9,7 @@
       # Enable systemd-boot
       systemd-boot = {
         enable = true;
-        configurationLimit = 15; # Keep last 15 generations
+        configurationLimit = 3; # Keep last 15 generations
         consoleMode = "auto";
         editor = false; # Disable editing boot entries for security
       };
