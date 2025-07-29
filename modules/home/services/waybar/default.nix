@@ -12,433 +12,446 @@ in
 {
   options.meadow.services.waybar.enable = mkEnableOption "waybar";
 
-  config.programs.waybar = {
-    enable = mkIf cfg.enable true;
-    systemd = {
+  config = {
+    programs.waybar = mkIf cfg.enable {
       enable = true;
-      target = "graphical-session.target";
-    };
-    settings = [
-      {
-        layer = "top";
-        height = 37;
-        spacing = 5;
-        modules-left = [
-          "image"
-          "hyprland/workspaces"
-          "custom/spotify"
-        ];
-        modules-center = [
-          "user"
-        ];
-        modules-right = [
-          "tray"
-          #"bluetooth"
-          "power-profiles-daemon"
-          "pulseaudio"
-          "network"
-          "battery"
-          "clock"
-          "custom/notification"
-          "custom/power"
-        ];
-
-        "hyprland/window" = {
-          separate-outputs = false;
-        };
-
-        "hyprland/workspaces" = {
-          format = "{icon}";
-          on-click = "activate";
-          format-icons = {
-            "1" = "󰌽";
-            "2" = "󰮯";
-            "3" = "";
-            "4" = "󰊤";
-            "5" = "󰣇";
-            urgent = "";
-            active = "";
-            default = "";
-          };
-          sort-by-number = true;
-          persistent-workspaces = {
-            "1" = [ ];
-            "2" = [ ];
-            "3" = [ ];
-            "4" = [ ];
-          };
-        };
-
-        "user" = {
-          format = "  ${config.home.username} | ({work_H}hr {work_M} mins ↑)";
-          interval = 60;
-          height = 23;
-          width = 23;
-          icon = true;
-        };
-
-        "image" = {
-          path = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
-          size = 20;
-          interval = 5;
-          on-click = "firefox https://search.nixos.org/packages";
-        };
-
-        "tray" = {
-          spacing = 10;
-        };
-
-        "clock" = {
-          tooltip-format = "{:%A, %B %d, %Y}";
-          format = "{:%I:%M}";
-        };
-
-        "battery" = {
-          states = {
-            warning = 40;
-          };
-          format = "{capacity}% {icon}";
-          format-icons = [
-            "󰂎"
-            "󰁺"
-            "󰁻"
-            "󰁼"
-            "󰁽"
-            "󰁾"
-            "󰁿"
-            "󰂀"
-            "󰂁"
-            "󰂂"
-            "󰁹"
+      systemd = {
+        enable = true;
+        target = "graphical-session.target";
+      };
+      settings = [
+        {
+          layer = "top";
+          height = 37;
+          spacing = 5;
+          modules-left = [
+            "image"
+            "hyprland/workspaces"
+            "custom/spotify"
           ];
-          format-charging = "󰂄 {capacity}%";
-          format-warning = "󰂃 {capacity}%";
-          tooltip-format = "{capacity}%";
-        };
+          modules-center = [
+            "user"
+          ];
+          modules-right = [
+            "tray"
+            #"bluetooth"
+            "power-profiles-daemon"
+            "pulseaudio"
+            "network"
+            "battery"
+            "clock"
+            "custom/notification"
+            "custom/power"
+          ];
 
-        "network" = {
-          format-wifi = "{ipaddr}";
-          format-ethernet = "";
-          format-disconnected = "";
-          tooltip-format = "Connected to {essid}";
-          tooltip-format-ethernet = "{ifname}";
-          on-click = "hyprctl dispatch exec '[float]' 'foot -e nmtui'";
-        };
+          "hyprland/window" = {
+            separate-outputs = false;
+          };
 
-        "pulseaudio" = {
-          scroll-step = 5;
-          format = "{icon}";
-          format-muted = "";
-          format-icons = {
-            default = [
-              ""
-              ""
-              ""
+          "hyprland/workspaces" = {
+            format = "{icon}";
+            on-click = "activate";
+            format-icons = {
+              "1" = "󰌽";
+              "2" = "󰮯";
+              "3" = "";
+              "4" = "󰊤";
+              "5" = "󰣇";
+              urgent = "";
+              active = "";
+              default = "";
+            };
+            sort-by-number = true;
+            persistent-workspaces = {
+              "1" = [ ];
+              "2" = [ ];
+              "3" = [ ];
+              "4" = [ ];
+            };
+          };
+
+          "user" = {
+            format = "  ${config.home.username} | ({work_H}hr {work_M} mins ↑)";
+            interval = 60;
+            height = 23;
+            width = 23;
+            icon = true;
+          };
+
+          "image" = {
+            path = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
+            size = 20;
+            interval = 5;
+            on-click = "firefox https://search.nixos.org/packages";
+          };
+
+          "tray" = {
+            spacing = 10;
+          };
+
+          "clock" = {
+            tooltip-format = "{:%A, %B %d, %Y}";
+            format = "{:%I:%M}";
+          };
+
+          "battery" = {
+            states = {
+              warning = 40;
+            };
+            format = "{capacity}% {icon}";
+            format-icons = [
+              "󰂎"
+              "󰁺"
+              "󰁻"
+              "󰁼"
+              "󰁽"
+              "󰁾"
+              "󰁿"
+              "󰂀"
+              "󰂁"
+              "󰂂"
+              "󰁹"
             ];
+            format-charging = "󰂄 {capacity}%";
+            format-warning = "󰂃 {capacity}%";
+            tooltip-format = "{capacity}%";
           };
-          tooltip-format = "{volume}% volume";
-          on-click = "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
-          on-scroll-up = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+";
-          on-scroll-down = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-";
-        };
 
-        "custom/power" = {
-          format = "󰐥";
-          on-click = "wlogout";
-        };
-
-        "power-profiles-daemon" = {
-          format = "{icon}";
-          tooltip-format = "Power profile: {profile}\nDriver: {driver}";
-          tooltip = true;
-          format-icons = {
-            default = "";
-            performance = "";
-            balanced = "";
-            power-saver = "";
+          "network" = {
+            format-wifi = "{ipaddr}";
+            format-ethernet = "";
+            format-disconnected = "";
+            tooltip-format = "Connected to {essid}";
+            tooltip-format-ethernet = "{ifname}";
+            on-click = "hyprctl dispatch exec '[float]' 'foot -e nmtui'";
           };
-        };
 
-        "bluetooth" = {
-          format = "󰂯";
-          format-disabled = "󰂲";
-          format-connected = "󰂱";
-          tooltip-format = "{controller_alias}\t{controller_address}";
-          tooltip-format-connected = "{controller_alias}\t{controller_address}\n\n{device_enumerate}";
-          tooltip-format-enumerate-connected = "{device_alias}\t{device_address}";
-          on-click = "blueman-manager";
-        };
-
-        "custom/spotify" = {
-          interval = 1;
-          return-type = "json";
-          exec = "playerctl -p spotify metadata --format '{\"text\": \"{{artist}} - {{title}}\", \"tooltip\": \"{{playerName}} : {{markup_escape(title)}}\", \"alt\": \"{{status}}\", \"class\": \"{{status}}\"}' 2>/dev/null || echo '{\"text\":\"\",\"tooltip\":\"\",\"alt\":\"\",\"class\":\"\"}'";
-          on-click = "playerctl -p spotify play-pause";
-          escape = true;
-        };
-
-        "custom/notification" = {
-          tooltip = false;
-          format = "{} {icon}";
-          format-icons = {
-            notification = "󱅫";
-            none = "";
-            dnd-notification = " ";
-            dnd-none = "󰂛";
-            inhibited-notification = " ";
-            inhibited-none = "";
-            dnd-inhibited-notification = " ";
-            dnd-inhibited-none = " ";
+          "pulseaudio" = {
+            scroll-step = 5;
+            format = "{icon}";
+            format-muted = "";
+            format-icons = {
+              default = [
+                ""
+                ""
+                ""
+              ];
+            };
+            tooltip-format = "{volume}% volume";
+            on-click = "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
+            on-scroll-up = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+";
+            on-scroll-down = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-";
           };
-          return-type = "json";
-          exec-if = "which swaync-client";
-          exec = "swaync-client -swb";
-          on-click = "sleep 0.1 && swaync-client -t -sw";
-          on-click-right = "sleep 0.1 && swaync-client -d -sw";
-          escape = true;
-        };
-      }
-    ];
 
-    style = ''
-      @define-color base #1e1e2e;
-      @define-color mantle #181825;
-      @define-color crust #11111b;
+          "custom/power" = {
+            format = "󰐥";
+            on-click = "wlogout";
+          };
 
-      @define-color text #cdd6f4;
-      @define-color subtext0 #a6adc8;
-      @define-color subtext1 #bac2de;
+          "power-profiles-daemon" = {
+            format = "{icon}";
+            tooltip-format = "Power profile: {profile}\nDriver: {driver}";
+            tooltip = true;
+            format-icons = {
+              default = "";
+              performance = "";
+              balanced = "";
+              power-saver = "";
+            };
+          };
 
-      @define-color surface0 #313244;
-      @define-color surface1 #45475a;
-      @define-color surface2 #585b70;
+          "bluetooth" = {
+            format = "󰂯";
+            format-disabled = "󰂲";
+            format-connected = "󰂱";
+            tooltip-format = "{controller_alias}\t{controller_address}";
+            tooltip-format-connected = "{controller_alias}\t{controller_address}\n\n{device_enumerate}";
+            tooltip-format-enumerate-connected = "{device_alias}\t{device_address}";
+            on-click = "blueman-manager";
+          };
 
-      @define-color overlay0 #6c7086;
-      @define-color overlay1 #7f849c;
-      @define-color overlay2 #9399b2;
+          "custom/spotify" = {
+            interval = 1;
+            return-type = "json";
+            exec = "playerctl -p spotify metadata --format '{\"text\": \"{{artist}} - {{title}}\", \"tooltip\": \"{{playerName}} : {{markup_escape(title)}}\", \"alt\": \"{{status}}\", \"class\": \"{{status}}\"}' 2>/dev/null || echo '{\"text\":\"\",\"tooltip\":\"\",\"alt\":\"\",\"class\":\"\"}'";
+            on-click = "playerctl -p spotify play-pause";
+            escape = true;
+          };
 
-      @define-color blue #89b4fa;
-      @define-color lavender #b4befe;
-      @define-color sapphire #74c7ec;
-      @define-color sky #89dceb;
-      @define-color teal #94e2d5;
-      @define-color green #a6e3a1;
-      @define-color yellow #f9e2af;
-      @define-color peach #fab387;
-      @define-color maroon #eba0ac;
-      @define-color red #f38ba8;
-      @define-color mauve #cba6f7;
-      @define-color pink #f5c2e7;
-      @define-color flamingo #f2cdcd;
-      @define-color rosewater #f5e0dc;
+          "custom/notification" = {
+            tooltip = false;
+            format = "{} {icon}";
+            format-icons = {
+              notification = "󱅫";
+              none = "";
+              dnd-notification = " ";
+              dnd-none = "󰂛";
+              inhibited-notification = " ";
+              inhibited-none = "";
+              dnd-inhibited-notification = " ";
+              dnd-inhibited-none = " ";
+            };
+            return-type = "json";
+            exec-if = "which swaync-client";
+            exec = "swaync-client -swb";
+            on-click = "sleep 0.1 && swaync-client -t -sw";
+            on-click-right = "sleep 0.1 && swaync-client -d -sw";
+            escape = true;
+          };
+        }
+      ];
 
-      * {
-        font-family:
-          "JetBrainsMono NF",
-          "Symbols Nerd Font";
-        font-weight: bolder;
-        font-size: 14px;
-      }
+      style = ''
+        @define-color base #1e1e2e;
+        @define-color mantle #181825;
+        @define-color crust #11111b;
 
-      window#waybar {
-        background-color: transparent;
-        color: @sapphire;
-        transition-property: background-color;
-        transition-duration: 0.5s;
-      }
+        @define-color text #cdd6f4;
+        @define-color subtext0 #a6adc8;
+        @define-color subtext1 #bac2de;
 
-      window#waybar.hidden {
-        opacity: 0.2;
-      }
+        @define-color surface0 #313244;
+        @define-color surface1 #45475a;
+        @define-color surface2 #585b70;
 
-      window#waybar.termite {
-        background-color: #3f3f3f;
-      }
+        @define-color overlay0 #6c7086;
+        @define-color overlay1 #7f849c;
+        @define-color overlay2 #9399b2;
 
-      window#waybar.chromium {
-        background-color: #000000;
-        border: none;
-      }
+        @define-color blue #89b4fa;
+        @define-color lavender #b4befe;
+        @define-color sapphire #74c7ec;
+        @define-color sky #89dceb;
+        @define-color teal #94e2d5;
+        @define-color green #a6e3a1;
+        @define-color yellow #f9e2af;
+        @define-color peach #fab387;
+        @define-color maroon #eba0ac;
+        @define-color red #f38ba8;
+        @define-color mauve #cba6f7;
+        @define-color pink #f5c2e7;
+        @define-color flamingo #f2cdcd;
+        @define-color rosewater #f5e0dc;
 
-      button {
-        box-shadow: inset 0 -3px transparent;
-        border: none;
-        border-radius: 0;
-      }
+        * {
+          font-family:
+            "JetBrainsMono NF",
+            "Symbols Nerd Font";
+          font-weight: bolder;
+          font-size: 14px;
+        }
 
-      #workspaces button:hover {
-        color: @blue;
-        box-shadow: inherit;
-        text-shadow: inherit;
-        background: @crust;
-        border: @crust;
-      }
+        window#waybar {
+          background-color: transparent;
+          color: @sapphire;
+          transition-property: background-color;
+          transition-duration: 0.5s;
+        }
 
-      #workspaces button.empty {
-        color: #44475a;
-      }
+        window#waybar.hidden {
+          opacity: 0.2;
+        }
 
-      #workspaces button {
-        padding: 0 5px;
-        color: @surface2;
-        margin: 4px 0 4px 0;
-        transition: color 200ms ease-in-out;
-      }
+        window#waybar.termite {
+          background-color: #3f3f3f;
+        }
 
-      #workspaces button.selected {
-        color: @blue;
-      }
+        window#waybar.chromium {
+          background-color: #000000;
+          border: none;
+        }
 
-      #workspaces button.active {
-        color: @mauve;
-      }
+        button {
+          box-shadow: inset 0 -3px transparent;
+          border: none;
+          border-radius: 0;
+        }
 
-      #workspaces button.urgent {
-        color: @red;
-      }
+        #workspaces button:hover {
+          color: @blue;
+          box-shadow: inherit;
+          text-shadow: inherit;
+          background: @crust;
+          border: @crust;
+        }
 
-      #image {
-        margin: 4px 0 4px 10px;
-      }
+        #workspaces button.empty {
+          color: #44475a;
+        }
 
-      #clock,
-      #battery,
-      #cpu,
-      #memory,
-      #disk,
-      #temperature,
-      #backlight,
-      #network.wifi,
-      #network.disconnected,
-      #wireplumber,
-      #custom-pacman,
-      #custom-power,
-      #tray,
-      #mode,
-      #idle_inhibitor,
-      #scratchpad,
-      #mpd {
-        padding: 0 6px;
-        color: @text;
-        border-radius: 15px;
-        margin: 5px 0;
-      }
+        #workspaces button {
+          padding: 0 5px;
+          color: @surface2;
+          margin: 4px 0 4px 0;
+          transition: color 200ms ease-in-out;
+        }
 
-      #power-profiles-daemon.balanced,
-      #power-profiles-daemon.power-saver {
-        margin-right: 7px;
-      }
+        #workspaces button.selected {
+          color: @blue;
+        }
 
-      #pulseaudio {
-        padding: 0 10px;
-        color: @text;
-        border-radius: 15px;
-        margin: 5px 0;
-      }
+        #workspaces button.active {
+          color: @mauve;
+        }
 
-      #window,
-      #workspaces {
-        margin: 0 4px;
-      }
+        #workspaces button.urgent {
+          color: @red;
+        }
 
-      .modules-left>widget:first-child>#workspaces {
-        margin-left: 2px;
-      }
+        #image {
+          margin: 4px 0 4px 10px;
+        }
 
-      #clock {
-        color: @text;
-      }
+        #clock,
+        #battery,
+        #cpu,
+        #memory,
+        #disk,
+        #temperature,
+        #backlight,
+        #network.wifi,
+        #network.disconnected,
+        #wireplumber,
+        #custom-pacman,
+        #custom-power,
+        #tray,
+        #mode,
+        #idle_inhibitor,
+        #scratchpad,
+        #mpd {
+          padding: 0 6px;
+          color: @text;
+          border-radius: 15px;
+          margin: 5px 0;
+        }
 
-      #custom-pacman {
-        color: @peach;
-      }
+        #power-profiles-daemon.balanced,
+        #power-profiles-daemon.power-saver {
+          margin-right: 7px;
+        }
 
-      #pulseaudio {
-        color: @mauve;
-      }
+        #pulseaudio {
+          padding: 0 10px;
+          color: @text;
+          border-radius: 15px;
+          margin: 5px 0;
+        }
 
-      #pulseaudio.muted {
-        color: @surface2;
-      }
+        #window,
+        #workspaces {
+          margin: 0 4px;
+        }
 
-      #network {
-        color: @blue;
-      }
+        .modules-left>widget:first-child>#workspaces {
+          margin-left: 2px;
+        }
 
-      #network.disconnected {
-        color: @surface2;
-      }
+        #clock {
+          color: @text;
+        }
 
-      #network.ethernet {
-        margin-right: 8px;
-        margin-left: 8px;
-      }
+        #custom-pacman {
+          color: @peach;
+        }
 
-      #battery {
-        color: @green;
-      }
+        #pulseaudio {
+          color: @mauve;
+        }
 
-      #battery.warning:not(.charging) {
-        color: @red;
-      }
+        #pulseaudio.muted {
+          color: @surface2;
+        }
 
-      #custom-power {
-        color: @maroon;
-      }
+        #network {
+          color: @blue;
+        }
 
-      #bluetooth {
-        margin-right: 10px;
-        font-size: 17px;
-        color: white;
-      }
+        #network.disconnected {
+          color: @surface2;
+        }
 
-      #keyboard-state>label {
-        padding: 0 5px;
-      }
+        #network.ethernet {
+          margin-right: 8px;
+          margin-left: 8px;
+        }
 
-      #keyboard-state>label.locked {
-        background: rgba(0, 0, 0, 0.2);
-      }
+        #battery {
+          color: @green;
+        }
 
-      #scratchpad {
-        background: rgba(0, 0, 0, 0.2);
-      }
+        #battery.warning:not(.charging) {
+          color: @red;
+        }
 
-      #scratchpad.empty {
-        background-color: transparent;
-      }
+        #custom-power {
+          color: @maroon;
+        }
 
-      .modules-left {
-        background-color: @crust;
-        border-radius: 10px;
-        padding-right: 10px;
-        margin: 5px 0 0 10px;
-      }
+        #bluetooth {
+          margin-right: 10px;
+          font-size: 17px;
+          color: white;
+        }
 
-      .modules-center {
-        background-color: @crust;
-        border-radius: 10px;
-        padding: 0 10px;
-        margin-top: 5px;
-        border: solid cyan 2px;
-      }
+        #keyboard-state>label {
+          padding: 0 5px;
+        }
 
-      .modules-right {
-        background-color: @crust;
-        border-radius: 10px;
-        padding: 0 10px;
-        margin: 5px 10px 0 0;
-      }
+        #keyboard-state>label.locked {
+          background: rgba(0, 0, 0, 0.2);
+        }
 
-      #custom-spotify {
-        color: #6fcf97;
-        padding-right: 10px;
-      }
+        #scratchpad {
+          background: rgba(0, 0, 0, 0.2);
+        }
 
-      #custom-notification {
-        color: white;
-        padding-right: 10px;
-      }
-    '';
+        #scratchpad.empty {
+          background-color: transparent;
+        }
+
+        .modules-left {
+          background-color: @crust;
+          border-radius: 10px;
+          padding-right: 10px;
+          margin: 5px 0 0 10px;
+        }
+
+        .modules-center {
+          background-color: @crust;
+          border-radius: 10px;
+          padding: 0 10px;
+          margin-top: 5px;
+          border: solid cyan 2px;
+        }
+
+        .modules-right {
+          background-color: @crust;
+          border-radius: 10px;
+          padding: 0 10px;
+          margin: 5px 10px 0 0;
+        }
+
+        #custom-spotify {
+          color: #6fcf97;
+          padding-right: 10px;
+        }
+
+        #custom-notification {
+          color: white;
+          padding-right: 10px;
+        }
+      '';
+    };
+
+    # Explicitly manage systemd service state
+    systemd.user.services.waybar = mkIf (!cfg.enable) {
+      Unit.Description = "Disabled waybar service";
+      Install = { };
+      Service = {
+        Type = "oneshot";
+        RemainAfterExit = true;
+        ExecStart = "/run/current-system/sw/bin/true";
+      };
+    };
   };
 }

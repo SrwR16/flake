@@ -40,7 +40,7 @@
       hyprpaper.enable = true;
       kanshi.enable = true;
       swaync.enable = false;
-      waybar.enable = true;
+      waybar.enable = false;
       glance.enable = true;
     };
 
