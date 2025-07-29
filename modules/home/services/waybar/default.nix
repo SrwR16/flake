@@ -33,6 +33,7 @@ in
         ];
         modules-right = [
           "tray"
+          #"bluetooth"
           "power-profiles-daemon"
           "pulseaudio"
           "network"
