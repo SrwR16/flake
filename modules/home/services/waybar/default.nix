@@ -12,7 +12,7 @@ in
 {
   options.meadow.services.waybar.enable = mkEnableOption "waybar";
 
-  config.programs.waybar = with config.lib.stylix.colors.withHashtag; {
+  config.programs.waybar = {
     enable = mkIf cfg.enable true;
     systemd = {
       enable = true;
@@ -21,246 +21,422 @@ in
     settings = [
       {
         layer = "top";
-        position = "top";
-        exclusive = true;
-        passthrough = false;
-        fixed-center = true;
-        gtk-layer-shell = true;
-        spacing = 0;
-        name = "hobar";
+        height = 37;
+        spacing = 5;
         modules-left = [
           "image"
-          "clock"
           "hyprland/workspaces"
-          "tray"
+          "custom/spotify"
+        ];
+        modules-center = [
+          "user"
         ];
         modules-right = [
-          "battery"
-          "memory"
+          "tray"
+          "power-profiles-daemon"
           "pulseaudio"
+          "network"
+          "battery"
           "clock"
+          "custom/notification"
+          "custom/power"
         ];
 
-        "image" = {
-          path = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
-          size = 24;
-          tooltip = false;
+        "hyprland/window" = {
+          separate-outputs = false;
         };
 
         "hyprland/workspaces" = {
-          format = "{id}";
-          active-only = false;
-          format-icons = {
-            "1" = "Q";
-            "2" = "W";
-            "3" = "E";
-            "4" = "R";
-            "5" = "T";
-            "6" = "Y";
-            "7" = "U";
-            "8" = "I";
-            "9" = "O";
-            "10" = "P";
-          };
-        };
-
-        "group/backlight-modules" = {
-          modules = [
-            "backlight#icon"
-            "backlight#percent"
-          ];
-          orientation = "inherit";
-        };
-
-        "backlight#icon" = {
           format = "{icon}";
-          format-icons = [
-            "󰃞"
-            "󰃟"
-            "󰃠"
-          ];
-          on-scroll-up = "${pkgs.brightnessctl}/bin/brightnessctl set 1%+ &> /dev/null";
-          on-scroll-down = "${pkgs.brightnessctl}/bin/brightnessctl set 1%- &> /dev/null";
-          tooltip-format = "Backlight: {percent}%";
-        };
-
-        "backlight#percent" = {
-          format = "{percent}%";
-          tooltip-format = "Backlight: {percent}%";
-        };
-
-        tray = {
-          icon-size = 14;
-          spacing = 14;
-          show-passive-items = true;
-          reverse-direction = true;
-        };
-
-        memory = {
-          interval = 20;
-          format = "MEM: [ {icon} ] <span size='8pt'>{percentage}%</span>";
-          tooltip-format = "MEM_TOT\t: {total}GiB\nSWP_TOT\t: {swapTotal}GiB\n\nMEM_USD\t: {used:0.1f}GiB\nSWP_USD\t: {swapUsed:0.1f}GiB";
-          format-icons = [
-            "░░░░░░░░"
-            "█░░░░░░░"
-            "██░░░░░░"
-            "███░░░░░"
-            "████░░░░"
-            "█████░░░"
-            "██████░░"
-            "<span color='#B7416E'>!!!!!!!!</span>"
-            "<span color='#B7416E'>CRITICAL</span>"
-          ];
-        };
-
-        battery = {
-          states = {
-            warning = 20;
-            critical = 15;
+          on-click = "activate";
+          format-icons = {
+            "1" = "󰌽";
+            "2" = "󰮯";
+            "3" = "";
+            "4" = "󰊤";
+            "5" = "󰣇";
+            urgent = "";
+            active = "";
+            default = "";
           };
-          format = "BAT= [ {icon} ] <span size='8pt'>{capacity}%</span>";
+          sort-by-number = true;
+          persistent-workspaces = {
+            "1" = [ ];
+            "2" = [ ];
+            "3" = [ ];
+            "4" = [ ];
+          };
+        };
+
+        "user" = {
+          format = "  ${config.home.username} | ({work_H}hr {work_M} mins ↑)";
+          interval = 60;
+          height = 23;
+          width = 23;
+          icon = true;
+        };
+
+        "image" = {
+          path = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
+          size = 20;
           interval = 5;
-          format-charging = "BAT= [ {icon} ] <span size='8pt'>CHRG</span>";
-          format-plugged = "BAT= [ {icon} ] <span size='8pt'>PLUG</span>";
-          tooltip-format = "BATTERY= {power}W\nSTATUS= {timeTo}\nCYCLES= {cycles}\nHEALTH= {health}";
-          format-icons = [
-            "<span color='#B7416E'>CRITICAL"
-            "<span color='#B7416E'>!!!!!!!!</span>"
-            "██░░░░░░"
-            "███░░░░░"
-            "████░░░░"
-            "█████░░░"
-            "██████░░"
-            "███████░"
-            "████████"
-          ];
+          on-click = "firefox https://search.nixos.org/packages";
         };
 
-        clock = {
-          actions = {
-            on-scroll-down = "shift_down";
-            on-scroll-up = "shift_up";
+        "tray" = {
+          spacing = 10;
+        };
+
+        "clock" = {
+          tooltip-format = "{:%A, %B %d, %Y}";
+          format = "{:%I:%M}";
+        };
+
+        "battery" = {
+          states = {
+            warning = 40;
           };
-          calendar = {
-            format = {
-              days = "<span color='${base04}'><b>{}</b></span>";
-              months = "<span color='${base05}'><b>{}</b></span>";
-              today = "<span color='${base05}'><b><u>{}</u></b></span>";
-              weekdays = "<span color='${base0D}'><b>{}</b></span>";
-            };
-            mode = "month";
-            on-scroll = 1;
+          format = "{capacity}% {icon}";
+          format-icons = [
+            "󰂎"
+            "󰁺"
+            "󰁻"
+            "󰁼"
+            "󰁽"
+            "󰁾"
+            "󰁿"
+            "󰂀"
+            "󰂁"
+            "󰂂"
+            "󰁹"
+          ];
+          format-charging = "󰂄 {capacity}%";
+          format-warning = "󰂃 {capacity}%";
+          tooltip-format = "{capacity}%";
+        };
+
+        "network" = {
+          format-wifi = "{ipaddr}";
+          format-ethernet = "";
+          format-disconnected = "";
+          tooltip-format = "Connected to {essid}";
+          tooltip-format-ethernet = "{ifname}";
+          on-click = "hyprctl dispatch exec '[float]' 'foot -e nmtui'";
+        };
+
+        "pulseaudio" = {
+          scroll-step = 5;
+          format = "{icon}";
+          format-muted = "";
+          format-icons = {
+            default = [
+              ""
+              ""
+              ""
+            ];
           };
-          format = "{:%I:%M %p}";
-          tooltip-format = "{calendar}";
+          tooltip-format = "{volume}% volume";
+          on-click = "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
+          on-scroll-up = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+";
+          on-scroll-down = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-";
+        };
+
+        "custom/power" = {
+          format = "󰐥";
+          on-click = "wlogout";
+        };
+
+        "power-profiles-daemon" = {
+          format = "{icon}";
+          tooltip-format = "Power profile: {profile}\nDriver: {driver}";
+          tooltip = true;
+          format-icons = {
+            default = "";
+            performance = "";
+            balanced = "";
+            power-saver = "";
+          };
+        };
+
+        "bluetooth" = {
+          format = "󰂯";
+          format-disabled = "󰂲";
+          format-connected = "󰂱";
+          tooltip-format = "{controller_alias}\t{controller_address}";
+          tooltip-format-connected = "{controller_alias}\t{controller_address}\n\n{device_enumerate}";
+          tooltip-format-enumerate-connected = "{device_alias}\t{device_address}";
+          on-click = "blueman-manager";
+        };
+
+        "custom/spotify" = {
+          interval = 1;
+          return-type = "json";
+          exec = "playerctl -p spotify metadata --format '{\"text\": \"{{artist}} - {{title}}\", \"tooltip\": \"{{playerName}} : {{markup_escape(title)}}\", \"alt\": \"{{status}}\", \"class\": \"{{status}}\"}' 2>/dev/null || echo '{\"text\":\"\",\"tooltip\":\"\",\"alt\":\"\",\"class\":\"\"}'";
+          on-click = "playerctl -p spotify play-pause";
+          escape = true;
+        };
+
+        "custom/notification" = {
+          tooltip = false;
+          format = "{} {icon}";
+          format-icons = {
+            notification = "󱅫";
+            none = "";
+            dnd-notification = " ";
+            dnd-none = "󰂛";
+            inhibited-notification = " ";
+            inhibited-none = "";
+            dnd-inhibited-notification = " ";
+            dnd-inhibited-none = " ";
+          };
+          return-type = "json";
+          exec-if = "which swaync-client";
+          exec = "swaync-client -swb";
+          on-click = "sleep 0.1 && swaync-client -t -sw";
+          on-click-right = "sleep 0.1 && swaync-client -d -sw";
+          escape = true;
         };
       }
     ];
 
     style = ''
+      @define-color base #1e1e2e;
+      @define-color mantle #181825;
+      @define-color crust #11111b;
+
+      @define-color text #cdd6f4;
+      @define-color subtext0 #a6adc8;
+      @define-color subtext1 #bac2de;
+
+      @define-color surface0 #313244;
+      @define-color surface1 #45475a;
+      @define-color surface2 #585b70;
+
+      @define-color overlay0 #6c7086;
+      @define-color overlay1 #7f849c;
+      @define-color overlay2 #9399b2;
+
+      @define-color blue #89b4fa;
+      @define-color lavender #b4befe;
+      @define-color sapphire #74c7ec;
+      @define-color sky #89dceb;
+      @define-color teal #94e2d5;
+      @define-color green #a6e3a1;
+      @define-color yellow #f9e2af;
+      @define-color peach #fab387;
+      @define-color maroon #eba0ac;
+      @define-color red #f38ba8;
+      @define-color mauve #cba6f7;
+      @define-color pink #f5c2e7;
+      @define-color flamingo #f2cdcd;
+      @define-color rosewater #f5e0dc;
+
       * {
-          border: none;
-          font-family: Roboto, RobotoMono Nerd Font;
-          font-weight: bold;
-          font-size: 14px;
-          min-height: 0;
-          padding: 2px;
-          border-radius: 0px;
+        font-family:
+          "JetBrainsMono NF",
+          "Symbols Nerd Font";
+        font-weight: bolder;
+        font-size: 14px;
       }
 
       window#waybar {
-          background: @theme_bg_color;
-          color: @theme_fg_color;
+        background-color: transparent;
+        color: @sapphire;
+        transition-property: background-color;
+        transition-duration: 0.5s;
       }
 
-      tooltip {
-          background: @theme_bg_color;
+      window#waybar.hidden {
+        opacity: 0.2;
       }
 
-      #workspaces button {
-          color: @theme_fg_color;
+      window#waybar.termite {
+        background-color: #3f3f3f;
       }
 
-      #workspaces button.active {
-          color: @theme_selected_bg_color;
-          background: @theme_bg_color;
+      window#waybar.chromium {
+        background-color: #000000;
+        border: none;
       }
 
-      #workspaces button.focused {
-          color: @theme_fg_color;
-          background: @theme_bg_color;
-      }
-
-      #workspaces button.urgent {
-          color: @theme_fg_color;
-          background: @theme_bg_color;
+      button {
+        box-shadow: inset 0 -3px transparent;
+        border: none;
+        border-radius: 0;
       }
 
       #workspaces button:hover {
-          background: @theme_fg_color;
-          color: @theme_bg_color;
+        color: @blue;
+        box-shadow: inherit;
+        text-shadow: inherit;
+        background: @crust;
+        border: @crust;
       }
 
-      #custom-language,
-      #custom-updates,
-      #custom-caffeine,
-      #custom-weather,
-      #window,
+      #workspaces button.empty {
+        color: #44475a;
+      }
+
+      #workspaces button {
+        padding: 0 5px;
+        color: @surface2;
+        margin: 4px 0 4px 0;
+        transition: color 200ms ease-in-out;
+      }
+
+      #workspaces button.selected {
+        color: @blue;
+      }
+
+      #workspaces button.active {
+        color: @mauve;
+      }
+
+      #workspaces button.urgent {
+        color: @red;
+      }
+
+      #image {
+        margin: 4px 0 4px 10px;
+      }
+
       #clock,
       #battery,
-      #pulseaudio,
-      #network,
-      #workspaces,
-      #tray,
       #cpu,
-      #backlight {
-          background: @theme_base_color;
-          padding: 0px 10px;
-          margin: 0px;
+      #memory,
+      #disk,
+      #temperature,
+      #backlight,
+      #network.wifi,
+      #network.disconnected,
+      #wireplumber,
+      #custom-pacman,
+      #custom-power,
+      #tray,
+      #mode,
+      #idle_inhibitor,
+      #scratchpad,
+      #mpd {
+        padding: 0 6px;
+        color: @text;
+        border-radius: 15px;
+        margin: 5px 0;
       }
 
-      #tray {
-          margin-right: 10px;
-      }
-
-      #workspaces {
-          color: @theme_text_color;
-      }
-
-      #window {
-          color: @theme_text_color;
-      }
-
-      #clock {
-          color: @theme_text_color;
-      }
-
-      #network {
-          color: @theme_text_color;
+      #power-profiles-daemon.balanced,
+      #power-profiles-daemon.power-saver {
+        margin-right: 7px;
       }
 
       #pulseaudio {
-          color: @theme_text_color;
+        padding: 0 10px;
+        color: @text;
+        border-radius: 15px;
+        margin: 5px 0;
       }
 
-      #pulseaudio.microphone {
-          color: @theme_text_color;
+      #window,
+      #workspaces {
+        margin: 0 4px;
+      }
+
+      .modules-left>widget:first-child>#workspaces {
+        margin-left: 2px;
+      }
+
+      #clock {
+        color: @text;
+      }
+
+      #custom-pacman {
+        color: @peach;
+      }
+
+      #pulseaudio {
+        color: @mauve;
+      }
+
+      #pulseaudio.muted {
+        color: @surface2;
+      }
+
+      #network {
+        color: @blue;
+      }
+
+      #network.disconnected {
+        color: @surface2;
+      }
+
+      #network.ethernet {
+        margin-right: 8px;
+        margin-left: 8px;
       }
 
       #battery {
-          color: @theme_text_color;
+        color: @green;
       }
 
       #battery.warning:not(.charging) {
-      	color: #C4E969;
+        color: @red;
       }
 
-      #battery.critical:not(.charging) {
-      	color: #B7416E;
+      #custom-power {
+        color: @maroon;
       }
 
-      #custom-weather {
-          color: @theme_text_color;
+      #bluetooth {
+        margin-right: 10px;
+        font-size: 17px;
+        color: white;
+      }
+
+      #keyboard-state>label {
+        padding: 0 5px;
+      }
+
+      #keyboard-state>label.locked {
+        background: rgba(0, 0, 0, 0.2);
+      }
+
+      #scratchpad {
+        background: rgba(0, 0, 0, 0.2);
+      }
+
+      #scratchpad.empty {
+        background-color: transparent;
+      }
+
+      .modules-left {
+        background-color: @crust;
+        border-radius: 10px;
+        padding-right: 10px;
+        margin: 5px 0 0 10px;
+      }
+
+      .modules-center {
+        background-color: @crust;
+        border-radius: 10px;
+        padding: 0 10px;
+        margin-top: 5px;
+        border: solid cyan 2px;
+      }
+
+      .modules-right {
+        background-color: @crust;
+        border-radius: 10px;
+        padding: 0 10px;
+        margin: 5px 10px 0 0;
+      }
+
+      #custom-spotify {
+        color: #6fcf97;
+        padding-right: 10px;
+      }
+
+      #custom-notification {
+        color: white;
+        padding-right: 10px;
       }
     '';
   };
