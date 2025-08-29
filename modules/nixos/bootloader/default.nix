@@ -1,6 +1,9 @@
-{ lib, ... }:
+{ lib, pkgs, ... }:
 {
   boot = {
+    # Use Zen kernel for better performance and responsiveness
+    kernelPackages = pkgs.linuxPackages_zen;
+
     kernel.sysctl."net.isoc" = true;
     loader = {
       # Disable GRUB completely
