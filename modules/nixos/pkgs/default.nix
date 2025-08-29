@@ -73,6 +73,8 @@ in
       yq
       vscode-fhs
       code-cursor
+      gradle_7
+      gemini-cli
     ];
   };
 }
