@@ -4,9 +4,6 @@
   pkgs,
   ...
 }:
-let
-  app2unit = pkgs.callPackage ../../../../packages/app2unit { };
-in
 {
   meadow.style.wallpaper = "${inputs.self}/home/shared/walls/${config.meadow.style.theme}.jpg";
 
@@ -20,18 +17,16 @@ in
 
       app2unit
       asciinema_3
-      bemoji
-      betterdiscordctl
       bitwarden
       bore-cli
       bruno
       charm
       charm-freeze
       chromium
-      google-chrome
       circumflex
       clipse
       colordiff
+      crush
       deadnix
       delta
       docker-compose
@@ -49,6 +44,7 @@ in
       glow
       gnumake
       go
+      google-chrome
       gping
       grimblast
       gum
@@ -67,20 +63,23 @@ in
       kubernetes-helm
       light
       magic-wormhole
+      material-symbols
       mods
+      navi
       nemo
       networkmanagerapplet
       nh
       nix-fast-build
       nix-inspect
       nix-output-monitor
+      nix-search-tv
       nix-update
       nixfmt-rfc-style
       obsidian
       onefetch
+      opencode
       openssl
       openvpn
-      opencode
       opkssh
       pavucontrol
       pfetch
@@ -90,14 +89,12 @@ in
       pre-commit
       presenterm
       python312Packages.gst-python
+      python312Packages.materialyoucolor
+      python312Packages.pillow
       python312Packages.pip
       python312Packages.pygobject3
       python312Packages.setuptools
       python312Packages.virtualenv
-      python312Packages.materialyoucolor
-      python312Packages.pillow
-      #qutebrowser
-      rustup
       satty
       slides
       sops
@@ -107,11 +104,9 @@ in
       teams-for-linux
       telegram-desktop
       television
-      nix-search-tv
       tldr
-      update-nix-fetchgit
+      up
       vegeta
-      vial
       viddy
       vlc
       wireplumber
