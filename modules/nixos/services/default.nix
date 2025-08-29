@@ -21,9 +21,13 @@ in
       dbus.enable = true;
       upower.enable = true;
       logind = {
-        powerKey = "suspend";
-        lidSwitch = "suspend";
-        lidSwitchExternalPower = "lock";
+        settings = {
+          Login = {
+            HandlePowerKey = "suspend";
+            HandleLidSwitch = "suspend";
+            HandleLidSwitchExternalPower = "lock";
+          };
+        };
       };
 
       tailscale = mkIf config.meadow.programs.tailscale.enable { enable = true; };
@@ -51,7 +55,7 @@ in
         settings = {
           terminal.vt = 1;
           default_session = {
-            command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --remember --remember-user-session --asterisks --cmd 'uwsm start default'";
+            command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --remember-user-session --asterisks --cmd 'uwsm start default'";
             user = "greeter";
           };
         };
