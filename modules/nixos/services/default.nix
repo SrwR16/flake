@@ -1,7 +1,6 @@
 {
   lib,
   config,
-  pkgs,
   ...
 }:
 let
@@ -25,7 +24,7 @@ in
           Login = {
             HandlePowerKey = "suspend";
             HandleLidSwitch = "suspend";
-            HandleLidSwitchExternalPower = "lock";
+            HandleLidSwitchExternalPower = "suspend";
           };
         };
       };
@@ -55,8 +54,8 @@ in
         settings = {
           terminal.vt = 1;
           default_session = {
-            command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --remember-user-session --asterisks --cmd 'uwsm start default'";
-            user = "greeter";
+            command = "Hyprland";
+            user = "sarw";
           };
         };
       };

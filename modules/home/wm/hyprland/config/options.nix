@@ -10,9 +10,12 @@
       "systemctl --user import-environment PATH"
       "systemctl --user restart xdg-desktop-portal.service"
       "systemctl --user restart xdg-desktop-portal-wlr.service"
-      # Ensure session management works properly
-      "systemctl --user start graphical-session.target"
-      "sleep 2 && hyprctl dispatch dpms on"
+      # Start all user services that depend on graphical session
+      "sleep 1 && systemctl --user start hyprland-session.target"
+      "sleep 2 && systemctl --user start vicinae.service"
+      "sleep 2 && systemctl --user start hypridle.service"
+      "sleep 3 && hyprpaper"
+      "sleep 3 && hyprctl dispatch dpms on"
     ];
     animations = {
       enabled = true;
