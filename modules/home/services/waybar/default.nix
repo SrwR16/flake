@@ -438,25 +438,30 @@ in
         }
 
         .modules-left {
-          background-color: @crust;
-          border-radius: 10px;
-          padding-right: 10px;
-          margin: 5px 0 0 10px;
+          background: rgba(45, 47, 58, 0.8);
+          border-radius: 8px;
+          padding-right: 8px;
+          margin: 3px 0 0 8px;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
         }
 
         .modules-center {
-          background-color: @crust;
-          border-radius: 10px;
-          padding: 0 10px;
-          margin-top: 5px;
-          border: solid cyan 2px;
+          background: rgba(45, 47, 58, 0.8);
+          border-radius: 8px;
+          padding: 0 8px;
+          margin-top: 3px;
+          border: 1px solid rgba(137, 180, 250, 0.3);
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
         }
 
         .modules-right {
-          background-color: @crust;
-          border-radius: 10px;
-          padding: 0 10px;
-          margin: 5px 10px 0 0;
+          background: rgba(45, 47, 58, 0.8);
+          border-radius: 8px;
+          padding: 0 8px;
+          margin: 3px 8px 0 0;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
         }
 
         #custom-spotify {
