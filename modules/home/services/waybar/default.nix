@@ -31,7 +31,7 @@ in
         {
           layer = "top";
           height = 28;
-          spacing = 2;
+          spacing = 0;
           modules-left = [
             "image"
             "hyprland/workspaces"
@@ -276,28 +276,28 @@ in
         }
 
         #workspaces {
-          background: @surface0;
+          background: transparent;
           border-radius: 6px;
           padding: 1px 4px;
           margin: 1px 3px;
         }
 
         #workspaces button {
-          padding: 3px 6px;
-          margin: 1px 1px;
-          border-radius: 4px;
+          padding: 4px 12px;
+          margin: 2px 3px;
+          border-radius: 999px;
           background: transparent;
           color: @subtext0;
-          border: 1px solid transparent;
-          transition: all 200ms ease-in-out;
-          min-width: 20px;
-          font-weight: bold;
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          transition: all 300ms ease-in-out;
+          min-width: 24px;
+          font-weight: 500;
           font-size: 11px;
         }
 
         #workspaces button:hover {
           color: @blue;
-          background: @surface1;
+          background: rgba(137, 180, 250, 0.2);
           border-color: @blue;
         }
 
@@ -316,7 +316,6 @@ in
           color: @crust;
           background: @mauve;
           border-color: @mauve;
-          box-shadow: 0 1px 4px rgba(203, 166, 247, 0.3);
         }
 
         #workspaces button.urgent {
@@ -337,8 +336,7 @@ in
         #disk,
         #temperature,
         #backlight,
-        #network.wifi,
-        #network.disconnected,
+        #network,
         #wireplumber,
         #custom-pacman,
         #custom-power,
@@ -347,10 +345,13 @@ in
         #idle_inhibitor,
         #scratchpad,
         #mpd {
-          padding: 0 6px;
+          padding: 4px 10px;
           color: @text;
-          border-radius: 15px;
-          margin: 5px 0;
+          border-radius: 999px;
+          margin: 2px 3px;
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          transition: all 300ms ease-in-out;
         }
 
         #power-profiles-daemon.balanced,
@@ -358,11 +359,68 @@ in
           margin-right: 7px;
         }
 
-        #pulseaudio {
-          padding: 0 10px;
+        /* Audio group - one complete pill */
+        #custom-audio-input, #pulseaudio {
+          padding: 4px 8px;
           color: @text;
-          border-radius: 15px;
-          margin: 5px 0;
+          background: rgba(203, 166, 247, 0.1);
+          border: 1px solid rgba(203, 166, 247, 0.3);
+          transition: all 300ms ease-in-out;
+        }
+
+        #custom-audio-input {
+          border-radius: 999px 0 0 999px;
+          margin: 2px 0 2px 3px;
+          margin-right: 0;
+          border-right: none;
+        }
+
+        #pulseaudio {
+          border-radius: 0 999px 999px 0;
+          margin: 2px 3px 2px 0;
+          margin-left: 0;
+          border-left: none;
+        }
+
+        /* Network group - one complete pill */
+        #bluetooth, #network {
+          padding: 4px 8px;
+          color: @text;
+          background: rgba(137, 180, 250, 0.1);
+          border: 1px solid rgba(137, 180, 250, 0.3);
+          transition: all 300ms ease-in-out;
+        }
+
+        #bluetooth {
+          border-radius: 999px 0 0 999px;
+          margin: 2px 0 2px 3px;
+          margin-right: 0;
+          border-right: none;
+        }
+
+        #network {
+          border-radius: 0 999px 999px 0;
+          margin: 2px 3px 2px 0;
+          margin-left: 0;
+          border-left: none;
+        }
+
+        #custom-audio-input:hover, #pulseaudio:hover {
+          background: rgba(203, 166, 247, 0.2);
+          border-color: rgba(203, 166, 247, 0.5);
+          box-shadow: 0 2px 8px rgba(203, 166, 247, 0.3);
+        }
+
+        #bluetooth:hover, #network:hover {
+          background: rgba(137, 180, 250, 0.2);
+          border-color: rgba(137, 180, 250, 0.5);
+          box-shadow: 0 2px 8px rgba(137, 180, 250, 0.3);
+        }
+
+        #custom-power:hover, #battery:hover, #clock:hover {
+          background: rgba(255, 255, 255, 0.1);
+          border-color: rgba(255, 255, 255, 0.2);
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
         }
 
         #window,
@@ -438,30 +496,31 @@ in
         }
 
         .modules-left {
-          background: rgba(45, 47, 58, 0.8);
-          border-radius: 8px;
-          padding-right: 8px;
+          background: rgba(45, 47, 58, 0.7);
+          border-radius: 999px;
+          padding-right: 12px;
+          padding-left: 4px;
           margin: 3px 0 0 8px;
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+          border: 1px solid rgba(255, 255, 255, 0.15);
+          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
         }
 
         .modules-center {
-          background: rgba(45, 47, 58, 0.8);
-          border-radius: 8px;
-          padding: 0 8px;
+          background: rgba(45, 47, 58, 0.7);
+          border-radius: 999px;
+          padding: 0 12px;
           margin-top: 3px;
-          border: 1px solid rgba(137, 180, 250, 0.3);
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+          border: 1px solid rgba(137, 180, 250, 0.4);
+          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
         }
 
         .modules-right {
-          background: rgba(45, 47, 58, 0.8);
-          border-radius: 8px;
-          padding: 0 8px;
+          background: rgba(45, 47, 58, 0.7);
+          border-radius: 999px;
+          padding: 0 12px;
           margin: 3px 8px 0 0;
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+          border: 1px solid rgba(255, 255, 255, 0.15);
+          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
         }
 
         #custom-spotify {
