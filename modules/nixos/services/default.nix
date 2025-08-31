@@ -1,6 +1,7 @@
 {
   lib,
   config,
+  pkgs,
   ...
 }:
 let
@@ -54,8 +55,7 @@ in
         settings = {
           terminal.vt = 1;
           default_session = {
-            command = "Hyprland";
-            user = "sarw";
+            command = "${pkgs.greetd}/bin/agreety --cmd ${pkgs.hyprland}/bin/Hyprland";
           };
         };
       };
