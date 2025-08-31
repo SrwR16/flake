@@ -19,6 +19,8 @@ in
       powerPanel
       audioControl
       pkgs.fuzzel
+      pkgs.networkmanagerapplet # For WiFi applet and connection editor
+      pkgs.gnome-calendar # For calendar
     ];
 
     programs.waybar = {
@@ -35,6 +37,7 @@ in
           modules-left = [
             "image"
             "hyprland/workspaces"
+            "hyprland/window"
             "custom/spotify"
           ];
           modules-center = [
@@ -43,9 +46,8 @@ in
           modules-right = [
             "custom/audio-input"
             "pulseaudio"
-            "tray"
             "bluetooth"
-            "network"
+            "tray"
             "power-profiles-daemon"
             "battery"
             "clock"
@@ -54,7 +56,12 @@ in
           ];
 
           "hyprland/window" = {
+            format = "{}";
             separate-outputs = false;
+            max-length = 50;
+            rewrite = {
+              "" = "Desktop";
+            };
           };
 
           "hyprland/workspaces" = {
@@ -91,6 +98,9 @@ in
           "clock" = {
             tooltip-format = "{:%A, %B %d, %Y}";
             format = "{:%I:%M}";
+            format-alt = "{:%Y-%m-%d}";
+            on-click = "gnome-calendar";
+            interval = 60;
           };
 
           "battery" = {
@@ -114,15 +124,7 @@ in
             format-charging = "󰂄 {capacity}%";
             format-warning = "󰂃 {capacity}%";
             tooltip-format = "{capacity}%";
-          };
-
-          "network" = {
-            format-wifi = "{ipaddr}";
-            format-ethernet = "";
-            format-disconnected = "";
-            tooltip-format = "Connected to {essid}";
-            tooltip-format-ethernet = "{ifname}";
-            on-click = "hyprctl dispatch exec '[float]' 'foot -e nmtui'";
+            interval = 5;
           };
 
           "pulseaudio" = {
@@ -316,6 +318,7 @@ in
           color: @crust;
           background: @mauve;
           border-color: @mauve;
+          box-shadow: 0 0 8px rgba(203, 166, 247, 0.6);
         }
 
         #workspaces button.urgent {
@@ -392,6 +395,8 @@ in
           border-left: none;
         }
 
+
+
         /* Individual bluetooth and network pills */
         #bluetooth {
           padding: 4px 8px;
@@ -403,7 +408,16 @@ in
           transition: all 300ms ease-in-out;
         }
 
-        #network {
+
+
+        #custom-audio-input:hover, #pulseaudio:hover {
+          background: rgba(203, 166, 247, 0.2);
+          border-color: rgba(203, 166, 247, 0.5);
+          box-shadow: 0 2px 8px rgba(203, 166, 247, 0.3);
+        }
+
+        /* Tray pill - using network blue colors for nm-applet */
+        #tray {
           padding: 4px 8px;
           color: @text;
           background: rgba(137, 180, 250, 0.1);
@@ -413,33 +427,16 @@ in
           transition: all 300ms ease-in-out;
         }
 
-        #custom-audio-input:hover, #pulseaudio:hover {
-          background: rgba(203, 166, 247, 0.2);
-          border-color: rgba(203, 166, 247, 0.5);
-          box-shadow: 0 2px 8px rgba(203, 166, 247, 0.3);
-        }
-
-        /* Tray pill */
-        #tray {
-          padding: 4px 8px;
-          color: @text;
-          background: rgba(255, 255, 255, 0.05);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          border-radius: 999px;
-          margin: 2px 3px;
-          transition: all 300ms ease-in-out;
-        }
-
-        #bluetooth:hover, #network:hover {
+        #bluetooth:hover {
           background: rgba(137, 180, 250, 0.2);
           border-color: rgba(137, 180, 250, 0.5);
           box-shadow: 0 2px 8px rgba(137, 180, 250, 0.3);
         }
 
         #tray:hover {
-          background: rgba(255, 255, 255, 0.1);
-          border-color: rgba(255, 255, 255, 0.2);
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+          background: rgba(137, 180, 250, 0.2);
+          border-color: rgba(137, 180, 250, 0.5);
+          box-shadow: 0 2px 8px rgba(137, 180, 250, 0.3);
         }
 
         #custom-power:hover, #battery:hover, #clock:hover {
@@ -448,7 +445,29 @@ in
           box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
         }
 
-        #window,
+        #window {
+          margin: 0 4px;
+          padding: 4px 12px;
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 999px;
+          color: @text;
+          font-weight: 500;
+          transition: all 300ms ease-in-out;
+        }
+
+        #window:hover {
+          background: rgba(255, 255, 255, 0.1);
+          border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        #window.empty {
+          opacity: 0;
+          margin: 0;
+          padding: 0;
+          min-width: 0;
+        }
+
         #workspaces {
           margin: 0 4px;
         }
@@ -473,16 +492,7 @@ in
           color: @surface2;
         }
 
-        #network {
-          color: @blue;
-        }
 
-        #network.disconnected {
-          color: @surface2;
-        }
-
-        #network.ethernet {
-        }
 
         #battery {
           color: @green;
@@ -495,6 +505,8 @@ in
         #custom-power {
           color: @maroon;
         }
+
+
 
         #bluetooth {
           font-size: 17px;
@@ -546,8 +558,22 @@ in
         }
 
         #custom-spotify {
-          color: #6fcf97;
+          color: @green;
           padding-right: 10px;
+          transition: all 300ms ease-in-out;
+        }
+
+        #custom-spotify.playing {
+          color: @green;
+        }
+
+        #custom-spotify.paused {
+          color: @yellow;
+        }
+
+        #custom-spotify.stopped {
+          color: @surface2;
+          opacity: 0.7;
         }
 
         #custom-notification {
@@ -555,6 +581,24 @@ in
           padding-right: 10px;
         }
       '';
+    };
+
+    # Network Manager Applet service
+    systemd.user.services.nm-applet = {
+      Unit = {
+        Description = "Network Manager Applet";
+        Wants = [ "graphical-session.target" ];
+        After = [ "graphical-session.target" ];
+      };
+      Install = {
+        WantedBy = [ "graphical-session.target" ];
+      };
+      Service = {
+        Type = "simple";
+        ExecStart = "${pkgs.networkmanagerapplet}/bin/nm-applet";
+        Restart = "on-failure";
+        RestartSec = 1;
+      };
     };
 
     # Explicitly manage systemd service state
