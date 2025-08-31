@@ -336,16 +336,14 @@ in
         #disk,
         #temperature,
         #backlight,
-        #network,
         #wireplumber,
         #custom-pacman,
         #custom-power,
-        #tray,
         #mode,
         #idle_inhibitor,
         #scratchpad,
         #mpd {
-          padding: 4px 10px;
+          padding: 4px 8px;
           color: @text;
           border-radius: 999px;
           margin: 2px 3px;
@@ -354,9 +352,21 @@ in
           transition: all 300ms ease-in-out;
         }
 
-        #power-profiles-daemon.balanced,
-        #power-profiles-daemon.power-saver {
-          margin-right: 7px;
+        /* Power profiles pill */
+        #power-profiles-daemon {
+          padding: 4px 8px;
+          color: @text;
+          background: rgba(249, 226, 175, 0.1);
+          border: 1px solid rgba(249, 226, 175, 0.3);
+          border-radius: 999px;
+          margin: 2px 3px;
+          transition: all 300ms ease-in-out;
+        }
+
+        #power-profiles-daemon:hover {
+          background: rgba(249, 226, 175, 0.2);
+          border-color: rgba(249, 226, 175, 0.5);
+          box-shadow: 0 2px 8px rgba(249, 226, 175, 0.3);
         }
 
         /* Audio group - one complete pill */
@@ -382,27 +392,25 @@ in
           border-left: none;
         }
 
-        /* Network group - one complete pill */
-        #bluetooth, #network {
+        /* Individual bluetooth and network pills */
+        #bluetooth {
           padding: 4px 8px;
           color: @text;
           background: rgba(137, 180, 250, 0.1);
           border: 1px solid rgba(137, 180, 250, 0.3);
+          border-radius: 999px;
+          margin: 2px 3px;
           transition: all 300ms ease-in-out;
         }
 
-        #bluetooth {
-          border-radius: 999px 0 0 999px;
-          margin: 2px 0 2px 3px;
-          margin-right: 0;
-          border-right: none;
-        }
-
         #network {
-          border-radius: 0 999px 999px 0;
-          margin: 2px 3px 2px 0;
-          margin-left: 0;
-          border-left: none;
+          padding: 4px 8px;
+          color: @text;
+          background: rgba(137, 180, 250, 0.1);
+          border: 1px solid rgba(137, 180, 250, 0.3);
+          border-radius: 999px;
+          margin: 2px 3px;
+          transition: all 300ms ease-in-out;
         }
 
         #custom-audio-input:hover, #pulseaudio:hover {
@@ -411,10 +419,27 @@ in
           box-shadow: 0 2px 8px rgba(203, 166, 247, 0.3);
         }
 
+        /* Tray pill */
+        #tray {
+          padding: 4px 8px;
+          color: @text;
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 999px;
+          margin: 2px 3px;
+          transition: all 300ms ease-in-out;
+        }
+
         #bluetooth:hover, #network:hover {
           background: rgba(137, 180, 250, 0.2);
           border-color: rgba(137, 180, 250, 0.5);
           box-shadow: 0 2px 8px rgba(137, 180, 250, 0.3);
+        }
+
+        #tray:hover {
+          background: rgba(255, 255, 255, 0.1);
+          border-color: rgba(255, 255, 255, 0.2);
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
         }
 
         #custom-power:hover, #battery:hover, #clock:hover {
@@ -457,8 +482,6 @@ in
         }
 
         #network.ethernet {
-          margin-right: 8px;
-          margin-left: 8px;
         }
 
         #battery {
@@ -474,7 +497,6 @@ in
         }
 
         #bluetooth {
-          margin-right: 10px;
           font-size: 17px;
           color: white;
         }
