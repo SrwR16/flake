@@ -1,20 +1,20 @@
 {
   wayland.windowManager.hyprland.settings = {
     exec-once = [
-      # Clipboard management
-      "clipse -listen &"
-      "wl-paste --type text --watch cliphist store &"
-      "wl-paste --type image --watch cliphist store &"
-      # Environment setup
-      "xprop -root -f _XWAYLAND_GLOBAL_OUTPUT_SCALE 32c -set _XWAYLAND_GLOBAL_OUTPUT_SCALE 1 &"
-      "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP &"
-      "systemctl --user import-environment PATH &"
-      "systemctl --user restart xdg-desktop-portal.service &"
-      "systemctl --user restart xdg-desktop-portal-wlr.service &"
-      # Start user services (hyprpaper will be started by systemd service)
-      "systemctl --user start hyprpaper.service &"
-      "systemctl --user start hyprland-session.target vicinae.service hypridle.service &"
-      "hyprctl dispatch dpms on &"
+      "hyprpaper &"
+      "clipse -listen"
+      "wl-paste --type text --watch cliphist store"
+      "wl-paste --type image --watch cliphist store"
+      "xprop -root -f _XWAYLAND_GLOBAL_OUTPUT_SCALE 32c -set _XWAYLAND_GLOBAL_OUTPUT_SCALE 1"
+      "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
+      "systemctl --user import-environment PATH"
+      "systemctl --user restart xdg-desktop-portal.service"
+      "systemctl --user restart xdg-desktop-portal-wlr.service"
+      # Start all user services that depend on graphical session
+      "sleep 1 && systemctl --user start hyprland-session.target"
+      "sleep 2 && systemctl --user start vicinae.service"
+      "sleep 2 && systemctl --user start hypridle.service"
+      "sleep 3 && hyprctl dispatch dpms on"
     ];
     animations = {
       enabled = true;
