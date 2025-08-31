@@ -56,6 +56,7 @@ in
         lazygit.enable = false;
         waybar.enable = false;
         mako.enable = false;
+        dunst.enable = false;
         nixcord.enable = false;
         sway.enable = false;
       };

@@ -37,7 +37,8 @@
       hyprpaper.enable = true;
       kanshi.enable = true;
       swaync.enable = false;
-      waybar.enable = false;
+      waybar.enable = true;
+      dunst.enable = true;
       glance.enable = true;
     };
 

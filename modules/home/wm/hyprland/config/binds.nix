@@ -113,11 +113,13 @@ in
       ];
 
       binde = [
-        ", XF86AudioRaiseVolume, exec, ${pkgs.pamixer}/bin/pamixer -i 5"
-        ", XF86AudioLowerVolume, exec, ${pkgs.pamixer}/bin/pamixer -d 5"
+        ", XF86AudioRaiseVolume, exec, volumectl up 5"
+        ", XF86AudioLowerVolume, exec, volumectl down 5"
 
-        ", XF86MonBrightnessUp, exec, ${pkgs.brillo}/bin/brillo -q -A 10"
-        ", XF86MonBrightnessDown, exec, ${pkgs.brillo}/bin/brillo -q -U 10"
+        ", XF86MonBrightnessUp, exec, lightctl up 10"
+        ", XF86MonBrightnessDown, exec, lightctl down 10"
+        ", XF86KbdBrightnessUp, exec, backlightctl up 10"
+        ", XF86KbdBrightnessDown, exec, backlightctl down 10"
         # Audio
         ",XF86AudioMute, exec, volumectl toggle-mute "
         ",XF86AudioMicMute, exec, ${pkgs.pamixer}/bin/pamixer --default-source --toggle-mute "

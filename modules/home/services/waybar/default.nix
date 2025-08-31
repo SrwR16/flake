@@ -8,12 +8,20 @@ let
   inherit (lib) mkIf mkEnableOption;
 
   cfg = config.meadow.services.waybar;
+  powerPanel = import ./power-panel.nix { inherit pkgs lib; };
+  audioControl = import ./audio-control.nix { inherit pkgs lib; };
 in
 {
   options.meadow.services.waybar.enable = mkEnableOption "waybar";
 
-  config = {
-    programs.waybar = mkIf cfg.enable {
+  config = mkIf cfg.enable {
+    home.packages = [
+      powerPanel
+      audioControl
+      pkgs.fuzzel
+    ];
+
+    programs.waybar = {
       enable = true;
       systemd = {
         enable = true;
@@ -22,8 +30,8 @@ in
       settings = [
         {
           layer = "top";
-          height = 37;
-          spacing = 5;
+          height = 28;
+          spacing = 2;
           modules-left = [
             "image"
             "hyprland/workspaces"
@@ -33,11 +41,12 @@ in
             "user"
           ];
           modules-right = [
-            "tray"
-            #"bluetooth"
-            "power-profiles-daemon"
+            "custom/audio-input"
             "pulseaudio"
+            "tray"
+            "bluetooth"
             "network"
+            "power-profiles-daemon"
             "battery"
             "clock"
             "custom/notification"
@@ -49,24 +58,15 @@ in
           };
 
           "hyprland/workspaces" = {
-            format = "{icon}";
+            format = "{name}";
             on-click = "activate";
-            format-icons = {
-              "1" = "󰌽";
-              "2" = "󰮯";
-              "3" = "";
-              "4" = "󰊤";
-              "5" = "󰣇";
-              urgent = "";
-              active = "";
-              default = "";
-            };
+            on-scroll-up = "hyprctl dispatch workspace e+1";
+            on-scroll-down = "hyprctl dispatch workspace e-1";
             sort-by-number = true;
+            all-outputs = false;
+            show-special = false;
             persistent-workspaces = {
               "1" = [ ];
-              "2" = [ ];
-              "3" = [ ];
-              "4" = [ ];
             };
           };
 
@@ -79,10 +79,9 @@ in
           };
 
           "image" = {
-            path = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
-            size = 20;
+            path = "/home/sarw/flake/modules/home/services/waybar/icon.png";
+            size = 24;
             interval = 5;
-            on-click = "firefox https://search.nixos.org/packages";
           };
 
           "tray" = {
@@ -128,24 +127,37 @@ in
 
           "pulseaudio" = {
             scroll-step = 5;
-            format = "{icon}";
-            format-muted = "";
+            format = "{icon} {volume}%";
+            format-muted = "󰝟 Muted";
             format-icons = {
               default = [
-                ""
-                ""
-                ""
+                "󰕿"
+                "󰖀"
+                "󰕾"
               ];
             };
-            tooltip-format = "{volume}% volume";
+            tooltip-format = "{desc}\nVolume: {volume}%\nLeft click: Mute toggle\nRight click: Device selection\nScroll: Volume control";
             on-click = "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
-            on-scroll-up = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+";
-            on-scroll-down = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-";
+            on-click-right = "${lib.getExe audioControl} output";
+            on-scroll-up = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-";
+            on-scroll-down = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+ --limit 1.0";
+          };
+
+          "custom/audio-input" = {
+            format = "󰍬";
+            tooltip = true;
+            tooltip-format = "Audio Input Controls\nLeft click: Mute toggle\nRight click: Device selection\nMiddle click: Open mixer";
+            on-click = "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle";
+            on-click-right = "${lib.getExe audioControl} input";
+            on-click-middle = "${lib.getExe audioControl} mixer";
+            interval = 1;
           };
 
           "custom/power" = {
             format = "󰐥";
-            on-click = "wlogout";
+            tooltip = true;
+            tooltip-format = "Power Options";
+            on-click = "${lib.getExe powerPanel}";
           };
 
           "power-profiles-daemon" = {
@@ -180,22 +192,18 @@ in
 
           "custom/notification" = {
             tooltip = false;
-            format = "{} {icon}";
+            format = "{icon}";
             format-icons = {
               notification = "󱅫";
               none = "";
-              dnd-notification = " ";
-              dnd-none = "󰂛";
-              inhibited-notification = " ";
-              inhibited-none = "";
-              dnd-inhibited-notification = " ";
-              dnd-inhibited-none = " ";
             };
+            exec-if = "which dunst";
+            exec = "echo '{\"text\":\"\",\"tooltip\":\"\",\"alt\":\"\",\"class\":\"\"}'";
+            on-click = "dunstctl history-pop";
+            on-click-right = "dunstctl close-all";
+            on-click-middle = "dunstctl set-paused toggle";
             return-type = "json";
-            exec-if = "which swaync-client";
-            exec = "swaync-client -swb";
-            on-click = "sleep 0.1 && swaync-client -t -sw";
-            on-click-right = "sleep 0.1 && swaync-client -d -sw";
+            interval = 5;
             escape = true;
           };
         }
@@ -267,35 +275,55 @@ in
           border-radius: 0;
         }
 
-        #workspaces button:hover {
-          color: @blue;
-          box-shadow: inherit;
-          text-shadow: inherit;
-          background: @crust;
-          border: @crust;
-        }
-
-        #workspaces button.empty {
-          color: #44475a;
+        #workspaces {
+          background: @surface0;
+          border-radius: 6px;
+          padding: 1px 4px;
+          margin: 1px 3px;
         }
 
         #workspaces button {
-          padding: 0 5px;
-          color: @surface2;
-          margin: 4px 0 4px 0;
-          transition: color 200ms ease-in-out;
+          padding: 3px 6px;
+          margin: 1px 1px;
+          border-radius: 4px;
+          background: transparent;
+          color: @subtext0;
+          border: 1px solid transparent;
+          transition: all 200ms ease-in-out;
+          min-width: 20px;
+          font-weight: bold;
+          font-size: 11px;
         }
 
-        #workspaces button.selected {
+        #workspaces button:hover {
           color: @blue;
+          background: @surface1;
+          border-color: @blue;
+        }
+
+        #workspaces button.empty {
+          color: @surface2;
+          opacity: 0.7;
+        }
+
+        #workspaces button.visible {
+          color: @text;
+          background: @surface1;
+          border-color: @text;
         }
 
         #workspaces button.active {
-          color: @mauve;
+          color: @crust;
+          background: @mauve;
+          border-color: @mauve;
+          box-shadow: 0 1px 4px rgba(203, 166, 247, 0.3);
         }
 
         #workspaces button.urgent {
-          color: @red;
+          color: @crust;
+          background: @red;
+          border-color: @red;
+          box-shadow: 0 1px 4px rgba(243, 139, 168, 0.4);
         }
 
         #image {

@@ -91,7 +91,54 @@ let
         -h string:x-canonical-private-synchronous:lightctl \
         -h int:value:"$brightness_percentage" \
         -i display-brightness-symbolic \
+        -t 2000 \
         "LIGHTCTL" "Brightness: $brightness_percentage%"
+    '';
+
+  # Backlight control utility (keyboard backlight)
+  backlightctl =
+    let
+      inherit (pkgs) libnotify;
+    in
+    pkgs.writeShellScriptBin "backlightctl" ''
+      BACKLIGHT_PATH="/sys/class/leds/asus::kbd_backlight"
+
+      if [ ! -w "$BACKLIGHT_PATH/brightness" ]; then
+        echo "Error: Cannot write to keyboard backlight. Check permissions."
+        exit 1
+      fi
+
+      current=$(cat "$BACKLIGHT_PATH/brightness" 2>/dev/null || echo "0")
+      max_brightness=$(cat "$BACKLIGHT_PATH/max_brightness" 2>/dev/null || echo "3")
+
+      case "$1" in
+      up)
+        if [ "$current" -lt "$max_brightness" ]; then
+          new_brightness=$((current + 1))
+          echo "$new_brightness" > "$BACKLIGHT_PATH/brightness"
+        fi
+        ;;
+      down)
+        if [ "$current" -gt 0 ]; then
+          new_brightness=$((current - 1))
+          echo "$new_brightness" > "$BACKLIGHT_PATH/brightness"
+        fi
+        ;;
+      esac
+
+      # Get updated value
+      current=$(cat "$BACKLIGHT_PATH/brightness" 2>/dev/null || echo "0")
+      max_brightness=$(cat "$BACKLIGHT_PATH/max_brightness" 2>/dev/null || echo "3")
+      percentage=$(( (current * 100) / max_brightness ))
+
+      ${libnotify}/bin/notify-send --transient \
+        -u normal \
+        -a "BACKLIGHTCTL" \
+        -h string:x-canonical-private-synchronous:backlightctl \
+        -h int:value:"$percentage" \
+        -i keyboard-brightness-symbolic \
+        -t 2000 \
+        "BACKLIGHTCTL" "Keyboard Backlight: $percentage% ($current/$max_brightness)"
     '';
 in
 {
@@ -129,6 +176,7 @@ in
         ocrScript
         volumectl
         lightctl
+        backlightctl
       ];
 
       sessionVariables = {
