@@ -31,6 +31,10 @@ PanelWindow {
     property alias modalFocusScope: focusScope
     property bool shouldBeVisible: false
     property bool shouldHaveFocus: shouldBeVisible
+    
+    onShouldBeVisibleChanged: {
+        PopupStateService.setPopupOpen(shouldBeVisible)
+    }
     property bool allowFocusOverride: false
     property bool allowStacking: false
 

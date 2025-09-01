@@ -49,6 +49,10 @@ DankPopout {
     screen: triggerScreen
     shouldBeVisible: false
     visible: shouldBeVisible
+    
+    onShouldBeVisibleChanged: {
+        PopupStateService.setPopupOpen(shouldBeVisible)
+    }
 
     content: Component {
         Rectangle {

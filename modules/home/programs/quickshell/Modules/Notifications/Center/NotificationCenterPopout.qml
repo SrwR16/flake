@@ -53,6 +53,7 @@ DankPopout {
     }
 
     onShouldBeVisibleChanged: {
+        PopupStateService.setPopupOpen(shouldBeVisible)
         if (shouldBeVisible) {
             NotificationService.onOverlayOpen()
             // Set up keyboard controller when content is loaded

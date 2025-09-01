@@ -62,6 +62,7 @@ DankPopout {
     visible: shouldBeVisible
 
     onShouldBeVisibleChanged: {
+        PopupStateService.setPopupOpen(shouldBeVisible)
         if (shouldBeVisible) {
             NetworkService.autoRefreshEnabled = NetworkService.wifiEnabled
             if (UserInfoService)

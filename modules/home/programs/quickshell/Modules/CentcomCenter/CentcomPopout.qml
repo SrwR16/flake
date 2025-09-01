@@ -36,11 +36,13 @@ PanelWindow {
             closeTimer.stop()
             shouldBeVisible = true
             visible = true
+            PopupStateService.setPopupOpen(true)
             Qt.callLater(() => {
                              calendarGrid.loadEventsForMonth()
                          })
         } else {
             shouldBeVisible = false
+            PopupStateService.setPopupOpen(false)
             closeTimer.restart()
         }
     }
