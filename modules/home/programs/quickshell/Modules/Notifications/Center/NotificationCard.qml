@@ -156,6 +156,17 @@ Rectangle {
                 source: {
                     if (parent.hasNotificationImage)
                         return notificationGroup.latestNotification.cleanImage
+
+                    // Prefer desktop-entry icon when available (more reliable)
+                    if (notificationGroup?.latestNotification?.desktopEntry) {
+                        const entry = DesktopEntries.heuristicLookup(notificationGroup.latestNotification.desktopEntry)
+                        if (entry && entry.icon) {
+                            const p = Quickshell.iconPath(entry.icon, true)
+                            if (p && p !== "")
+                                return p
+                        }
+                    }
+
                     if (notificationGroup?.latestNotification?.appIcon) {
                         const appIcon = notificationGroup.latestNotification.appIcon
                         if (appIcon.startsWith("file://") || appIcon.startsWith(

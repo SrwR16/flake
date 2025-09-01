@@ -254,6 +254,16 @@ PanelWindow {
                             if (parent.hasNotificationImage)
                                 return notificationData.cleanImage || ""
 
+                            // Prefer desktop-entry icon when available (more reliable)
+                            if (notificationData.desktopEntry && notificationData.desktopEntry !== "") {
+                                const entry = DesktopEntries.heuristicLookup(notificationData.desktopEntry)
+                                if (entry && entry.icon) {
+                                    const p = Quickshell.iconPath(entry.icon, true)
+                                    if (p && p !== "")
+                                        return p
+                                }
+                            }
+
                             if (notificationData.appIcon) {
                                 const appIcon = notificationData.appIcon
                                 if (appIcon.startsWith("file://")
