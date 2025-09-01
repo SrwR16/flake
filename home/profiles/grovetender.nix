@@ -39,8 +39,8 @@
       hyprpaper.enable = true;
       kanshi.enable = true;
       swaync.enable = false;
-      waybar.enable = true;
-      dunst.enable = true;
+      waybar.enable = false; # Disabled - using QuickShell instead
+      dunst.enable = false; # Disabled - DankMaterialShell has its own notification system
       glance.enable = true;
 
       vicinae.enable = true;

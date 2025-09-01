@@ -19,6 +19,7 @@
       tpm.enable = true;
       wireguard.enable = false;
       kanata.enable = false;
+      power-profiles-daemon.enable = true;
     };
     impermanence.enable = true;
   };

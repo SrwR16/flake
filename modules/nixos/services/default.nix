@@ -13,6 +13,7 @@ in
 {
   options.meadow.services = {
     pipewire.enable = mkEnableOption "pipewire";
+    power-profiles-daemon.enable = mkEnableOption "power-profiles-daemon";
   };
   config = {
     services = {
@@ -43,6 +44,10 @@ in
       pipewire = mkIf config.meadow.services.pipewire.enable {
         enable = true;
         pulse.enable = true;
+      };
+
+      power-profiles-daemon = mkIf config.meadow.services.power-profiles-daemon.enable {
+        enable = true;
       };
 
       gnome = {

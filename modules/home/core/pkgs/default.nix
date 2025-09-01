@@ -86,6 +86,7 @@
       pgcli
       pinentry
       playerctl
+      power-profiles-daemon
       pre-commit
       presenterm
       python312Packages.gst-python
