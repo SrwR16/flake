@@ -22,8 +22,11 @@ Singleton {
         systemProfileCheckProcess.running = true
     }
 
+    signal profileImageUpdated(string imagePath)
+    
     function setProfileImage(imagePath) {
         profileImage = imagePath
+        profileImageUpdated(imagePath)  // Emit signal for persistence
         if (accountsServiceAvailable && imagePath) {
             setSystemProfileImage(imagePath)
         }

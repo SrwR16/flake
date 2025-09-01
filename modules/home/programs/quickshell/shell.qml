@@ -26,6 +26,19 @@ ShellRoot {
         PortalService.init()
         // Initialize DisplayService night mode functionality
         DisplayService.nightModeEnabled
+        
+        // Load persistent profile image if available
+        if (SettingsData.profileImage && SettingsData.profileImage !== "") {
+            PortalService.profileImage = SettingsData.profileImage
+        }
+    }
+    
+    // Handle profile image changes to persist them
+    Connections {
+        target: PortalService
+        function onProfileImageUpdated(imagePath) {
+            SettingsData.setProfileImage(imagePath)
+        }
     }
 
     WallpaperBackground {

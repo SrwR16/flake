@@ -93,6 +93,7 @@ Singleton {
     property int notificationTimeoutLow: 5000
     property int notificationTimeoutNormal: 5000
     property int notificationTimeoutCritical: 0
+    property string profileImage: ""
     property var screenPreferences: ({})
     readonly property string defaultFontFamily: "Inter Variable"
     readonly property string defaultMonoFontFamily: "Fira Code"
@@ -295,6 +296,7 @@ Singleton {
                         !== undefined ? settings.notificationTimeoutNormal : 5000
                 notificationTimeoutCritical = settings.notificationTimeoutCritical
                         !== undefined ? settings.notificationTimeoutCritical : 0
+                profileImage = settings.profileImage !== undefined ? settings.profileImage : ""
                 topBarSpacing = settings.topBarSpacing !== undefined ? settings.topBarSpacing : 4
                 topBarBottomGap = settings.topBarBottomGap !== undefined ? settings.topBarBottomGap : 0
                 topBarInnerPadding = settings.topBarInnerPadding !== undefined ? settings.topBarInnerPadding : 8
@@ -393,6 +395,7 @@ Singleton {
                                                 "notificationTimeoutLow": notificationTimeoutLow,
                                                 "notificationTimeoutNormal": notificationTimeoutNormal,
                                                 "notificationTimeoutCritical": notificationTimeoutCritical,
+                                                "profileImage": profileImage,
                                                 "screenPreferences": screenPreferences
                                             }, null, 2))
     }
@@ -915,6 +918,11 @@ Singleton {
 
     function setNotificationTimeoutCritical(timeout) {
         notificationTimeoutCritical = timeout
+        saveSettings()
+    }
+
+    function setProfileImage(imagePath) {
+        profileImage = imagePath
         saveSettings()
     }
 
