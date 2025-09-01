@@ -4,7 +4,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtCore
 
-Singleton {
+QtObject {
     id: root
 
     // Track if any popup is currently open
