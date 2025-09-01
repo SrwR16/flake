@@ -105,7 +105,9 @@ in
 
           "battery" = {
             states = {
-              warning = 40;
+              good = 80;
+              warning = 30;
+              critical = 15;
             };
             format = "{capacity}% {icon}";
             format-icons = [
@@ -122,9 +124,18 @@ in
               "󰁹"
             ];
             format-charging = "󰂄 {capacity}%";
+            format-plugged = "󰚥 {capacity}%";
+            format-alt = "{time} {icon}";
+            format-full = "󰁹 Full";
             format-warning = "󰂃 {capacity}%";
-            tooltip-format = "{capacity}%";
-            interval = 5;
+            format-critical = "󰁺 {capacity}%";
+            tooltip-format = "Battery: {capacity}%\n{timeTo}\nPower: {power}W\nHealth: {health}%";
+            tooltip-format-charging = "Charging: {capacity}%\nTime to full: {time}\nPower: {power}W";
+            tooltip-format-plugged = "Plugged: {capacity}%\nPower: {power}W";
+            tooltip-format-full = "Battery Full\nPower: {power}W";
+            interval = 30;
+            bat = "BAT0";
+            adapter = "ADP1";
           };
 
           "pulseaudio" = {
@@ -498,8 +509,34 @@ in
           color: @green;
         }
 
+        #battery.good {
+          color: @green;
+        }
+
         #battery.warning:not(.charging) {
+          color: @yellow;
+        }
+
+        #battery.critical:not(.charging) {
           color: @red;
+          animation: blink 1s linear infinite alternate;
+        }
+
+        #battery.charging {
+          color: @blue;
+        }
+
+        #battery.plugged {
+          color: @sapphire;
+        }
+
+        #battery.full {
+          color: @teal;
+        }
+
+        @keyframes blink {
+          from { opacity: 1; }
+          to { opacity: 0.7; }
         }
 
         #custom-power {
