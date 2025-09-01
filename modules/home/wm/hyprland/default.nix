@@ -30,7 +30,7 @@ let
   # Volume control utility
   volumectl =
     let
-      inherit (pkgs) libnotify pamixer libcanberra-gtk3;
+      inherit (pkgs) pamixer libcanberra-gtk3;
     in
     pkgs.writeShellScriptBin "volumectl" ''
       #!/usr/bin/env bash
@@ -47,32 +47,17 @@ let
         ;;
       esac
 
-      volume_percentage="$(${_ pamixer} --get-volume)"
+      # Play audio feedback (optional)
       isMuted="$(${_ pamixer} --get-mute)"
-
-      if [ "$isMuted" = "true" ]; then
-        ${libnotify}/bin/notify-send --transient \
-          -u normal \
-          -a "VOLUMECTL" \
-          -i audio-volume-muted-symbolic \
-          "VOLUMECTL" "Volume Muted"
-      else
-        ${libnotify}/bin/notify-send --transient \
-          -u normal \
-          -a "VOLUMECTL" \
-          -h string:x-canonical-private-synchronous:volumectl \
-          -h int:value:"$volume_percentage" \
-          -i audio-volume-high-symbolic \
-          "VOLUMECTL" "Volume: $volume_percentage%"
-
-        ${libcanberra-gtk3}/bin/canberra-gtk-play -i audio-volume-change -d "volumectl"
+      if [ "$isMuted" = "false" ]; then
+        ${libcanberra-gtk3}/bin/canberra-gtk-play -i audio-volume-change -d "volumectl" 2>/dev/null || true
       fi
     '';
 
   # Brightness control utility
   lightctl =
     let
-      inherit (pkgs) libnotify brightnessctl;
+      inherit (pkgs) brightnessctl;
     in
     pkgs.writeShellScriptBin "lightctl" ''
       case "$1" in
@@ -83,16 +68,6 @@ let
         ${_ brightnessctl} -q s "$2"%-
         ;;
       esac
-
-      brightness_percentage=$((($(${_ brightnessctl} g) * 100) / $(${_ brightnessctl} m)))
-      ${libnotify}/bin/notify-send --transient \
-        -u normal \
-        -a "LIGHTCTL" \
-        -h string:x-canonical-private-synchronous:lightctl \
-        -h int:value:"$brightness_percentage" \
-        -i display-brightness-symbolic \
-        -t 2000 \
-        "LIGHTCTL" "Brightness: $brightness_percentage%"
     '';
 
   # Backlight control utility (keyboard backlight)

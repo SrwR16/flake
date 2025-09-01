@@ -8,7 +8,7 @@ DankOSD {
 
     osdWidth: Math.min(260, Screen.width - Theme.spacingM * 2)
     osdHeight: 40 + Theme.spacingS * 2
-    autoHideInterval: 3000
+    autoHideInterval: 1000
     enableMouseInteraction: true
 
 

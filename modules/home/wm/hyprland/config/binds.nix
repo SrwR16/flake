@@ -113,16 +113,16 @@ in
       ];
 
       binde = [
-        ", XF86AudioRaiseVolume, exec, volumectl up 5"
-        ", XF86AudioLowerVolume, exec, volumectl down 5"
+        ", XF86AudioRaiseVolume, exec, quickshell -c dms ipc call audio increment 5"
+        ", XF86AudioLowerVolume, exec, quickshell -c dms ipc call audio decrement 5"
 
-        ", XF86MonBrightnessUp, exec, lightctl up 10"
-        ", XF86MonBrightnessDown, exec, lightctl down 10"
-        ", XF86KbdBrightnessUp, exec, backlightctl up 10"
-        ", XF86KbdBrightnessDown, exec, backlightctl down 10"
+        ", XF86MonBrightnessUp, exec, quickshell -c dms ipc call brightness increment 10 ''"
+        ", XF86MonBrightnessDown, exec, quickshell -c dms ipc call brightness decrement 10 ''"
+        ", XF86KbdBrightnessUp, exec, quickshell -c dms ipc call brightness increment 33 asus::kbd_backlight"
+        ", XF86KbdBrightnessDown, exec, quickshell -c dms ipc call brightness decrement 33 asus::kbd_backlight"
         # Audio
-        ",XF86AudioMute, exec, volumectl toggle-mute "
-        ",XF86AudioMicMute, exec, ${pkgs.pamixer}/bin/pamixer --default-source --toggle-mute "
+        ",XF86AudioMute, exec, quickshell -c dms ipc call audio mute"
+        ",XF86AudioMicMute, exec, quickshell -c dms ipc call audio micmute"
       ];
 
       # Mouse bindings

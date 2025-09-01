@@ -8,7 +8,7 @@ DankOSD {
 
     osdWidth: Theme.iconSize + Theme.spacingS * 2
     osdHeight: Theme.iconSize + Theme.spacingS * 2
-    autoHideInterval: 2000
+    autoHideInterval: 1000
     enableMouseInteraction: false
 
     Connections {
