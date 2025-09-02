@@ -31,7 +31,7 @@ Singleton {
         if (device.energyCapacity > 0 && device.energy > 0) {
             // energyCapacity is current full capacity, we need design capacity
             // Use a rough estimate based on typical battery degradation patterns
-            var healthPercent = (device.energyCapacity / 90.0045)
+            var healthPercent = (device.energyCapacity / 50.0149)
             * 100 // your design capacity from upower
             return Math.round(healthPercent) + "%"
         }
