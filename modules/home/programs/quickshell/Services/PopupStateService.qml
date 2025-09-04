@@ -10,11 +10,13 @@ Item {
     // Track if any popup is currently open
     property bool anyPopupOpen: false
     property bool shouldShowBar: false
+    // Allow dynamic control of the hide delay (in milliseconds)
+    property int barHideDelayMs: 1000
 
     // Timer for delayed bar hiding
     Timer {
         id: hideBarTimer
-        interval: 3000
+        interval: root.barHideDelayMs
         onTriggered: {
             if (!anyPopupOpen) {
                 shouldShowBar = false
@@ -30,6 +32,8 @@ Item {
             hideBarTimer.stop()
         } else {
             // Start the 5-second delay timer when popup closes
+            // Ensure the timer uses the latest delay value
+            hideBarTimer.interval = root.barHideDelayMs
             hideBarTimer.restart()
         }
     }
