@@ -162,7 +162,7 @@ Singleton {
 
     Timer {
         id: groupsDebounce
-        interval: 16
+        interval: 100  // Reduced frequency from 16ms to 100ms
         repeat: false
         onTriggered: _recomputeGroups()
     }

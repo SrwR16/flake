@@ -283,7 +283,7 @@ Item {
                         Timer {
                             id: focusTimer
 
-                            interval: 100
+                            interval: 1000  // Reduced frequency from 100ms to 1000ms
                             running: !demoMode
                             onTriggered: passwordField.forceActiveFocus()
                         }

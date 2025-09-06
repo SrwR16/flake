@@ -10,7 +10,7 @@ Singleton {
     id: root
 
     property int refCount: 0
-    property int updateInterval: refCount > 0 ? 3000 : 30000
+    property int updateInterval: 0  // Disabled - no updates
     property bool isUpdating: false
     property bool dgopAvailable: false
 
@@ -223,19 +223,22 @@ Singleton {
     }
 
     function updateAllStats() {
-        if (dgopAvailable && refCount > 0 && enabledModules.length > 0) {
-            isUpdating = true
-            dgopProcess.running = true
-        } else {
-            isUpdating = false
-        }
+        // Disabled to eliminate CPU usage
+        // if (dgopAvailable && refCount > 0 && enabledModules.length > 0) {
+        //     isUpdating = true
+        //     dgopProcess.running = true
+        // } else {
+        //     isUpdating = false
+        // }
+        isUpdating = false
     }
 
     function initializeGpuMetadata() {
-        if (!dgopAvailable)
-            return
-        // Load GPU metadata once at startup for basic info
-        gpuInitProcess.running = true
+        // Disabled to eliminate CPU usage
+        // if (!dgopAvailable)
+        //     return
+        // // Load GPU metadata once at startup for basic info
+        // gpuInitProcess.running = true
     }
 
     function buildDgopCommand() {
@@ -501,7 +504,7 @@ Singleton {
 
     function getProcessIcon(command) {
         const cmd = command.toLowerCase()
-        if (cmd.includes("firefox") || cmd.includes("chrome") || 
+        if (cmd.includes("firefox") || cmd.includes("chrome") ||
         cmd.includes("browser") || cmd.includes("chromium"))
             return "web"
         if (cmd.includes("code") || cmd.includes("editor")
@@ -515,7 +518,7 @@ Singleton {
             return "music_note"
         if (cmd.includes("video") || cmd.includes("vlc") || cmd.includes("mpv"))
             return "play_circle"
-        if (cmd.includes("systemd") || cmd.includes("elogind") || 
+        if (cmd.includes("systemd") || cmd.includes("elogind") ||
             cmd.includes("kernel") || cmd.includes("kthread") ||
             cmd.includes("kworker"))
             return "settings"
@@ -592,140 +595,144 @@ Singleton {
         processes = sorted.slice(0, processLimit)
     }
 
-    Timer {
-        id: updateTimer
-        interval: root.updateInterval
-        running: root.dgopAvailable && root.refCount > 0
-                 && root.enabledModules.length > 0
-        repeat: true
-        triggeredOnStart: true
-        onTriggered: root.updateAllStats()
-    }
+    // Disabled DgopService timer to eliminate CPU usage
+    // Timer {
+    //     id: updateTimer
+    //     interval: root.updateInterval
+    //     running: root.dgopAvailable && root.refCount > 0
+    //              && root.enabledModules.length > 0
+    //     repeat: true
+    //     triggeredOnStart: true
+    //     onTriggered: root.updateAllStats()
+    // }
 
-    Process {
-        id: dgopProcess
-        command: root.buildDgopCommand()
-        running: false
-        onCommandChanged: {
+    // Disabled dgopProcess to eliminate CPU usage
+    // Process {
+    //     id: dgopProcess
+    //     command: root.buildDgopCommand()
+    //     running: false
+    //     onCommandChanged: {
+    //         //console.log("DgopService command:", JSON.stringify(command))
+    //     }
+    //     onExited: exitCode => {
+    //         if (exitCode !== 0) {
+    //             console.warn("Dgop process failed with exit code:", exitCode)
+    //             isUpdating = false
+    //         }
+    //     }
+    //     stdout: StdioCollector {
+    //         onStreamFinished: {
+    //             if (text.trim()) {
+    //                 try {
+    //                     const data = JSON.parse(text.trim())
+    //                     parseData(data)
+    //                 } catch (e) {
+    //                     console.warn("Failed to parse dgop JSON:", e)
+    //                     console.warn("Raw text was:", text.substring(0, 200))
+    //                     isUpdating = false
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
 
-            //console.log("DgopService command:", JSON.stringify(command))
-        }
-        onExited: exitCode => {
-                      if (exitCode !== 0) {
-                          console.warn("Dgop process failed with exit code:",
-                                       exitCode)
-                          isUpdating = false
-                      }
-                  }
-        stdout: StdioCollector {
-            onStreamFinished: {
-                if (text.trim()) {
-                    try {
-                        const data = JSON.parse(text.trim())
-                        parseData(data)
-                    } catch (e) {
-                        console.warn("Failed to parse dgop JSON:", e)
-                        console.warn("Raw text was:", text.substring(0, 200))
-                        isUpdating = false
-                    }
-                }
-            }
-        }
-    }
+    // Disabled gpuInitProcess to eliminate CPU usage
+    // Process {
+    //     id: gpuInitProcess
+    //     command: ["dgop", "gpu", "--json"]
+    //     running: false
+    //     onExited: exitCode => {
+    //                   if (exitCode !== 0) {
+    //                       console.warn(
+    //                           "GPU init process failed with exit code:",
+    //                           exitCode)
+    //                   }
+    //               }
+    //     stdout: StdioCollector {
+    //         onStreamFinished: {
+    //             if (text.trim()) {
+    //                 try {
+    //                     const data = JSON.parse(text.trim())
+    //                     parseData(data)
+    //                 } catch (e) {
+    //                     console.warn("Failed to parse GPU init JSON:", e)
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
 
-    Process {
-        id: gpuInitProcess
-        command: ["dgop", "gpu", "--json"]
-        running: false
-        onExited: exitCode => {
-                      if (exitCode !== 0) {
-                          console.warn(
-                              "GPU init process failed with exit code:",
-                              exitCode)
-                      }
-                  }
-        stdout: StdioCollector {
-            onStreamFinished: {
-                if (text.trim()) {
-                    try {
-                        const data = JSON.parse(text.trim())
-                        parseData(data)
-                    } catch (e) {
-                        console.warn("Failed to parse GPU init JSON:", e)
-                    }
-                }
-            }
-        }
-    }
+    // Disabled dgopCheckProcess to eliminate CPU usage
+    // Process {
+    //     id: dgopCheckProcess
+    //     command: ["which", "dgop"]
+    //     running: false
+    //     onExited: exitCode => {
+    //         dgopAvailable = (exitCode === 0)
+    //         if (dgopAvailable) {
+    //             initializeGpuMetadata()
+    //             // Load persisted GPU PCI IDs from session state
+    //             if (SessionData.enabledGpuPciIds
+    //                 && SessionData.enabledGpuPciIds.length > 0) {
+    //                 for (const pciId of SessionData.enabledGpuPciIds) {
+    //                     addGpuPciId(pciId)
+    //                 }
+    //                 // Trigger update if we already have active modules
+    //                 if (refCount > 0 && enabledModules.length > 0) {
+    //                     updateAllStats()
+    //                 }
+    //             }
+    //         } else {
+    //             console.warn("dgop is not installed or not in PATH")
+    //         }
+    //     }
+    // }
 
-    Process {
-        id: dgopCheckProcess
-        command: ["which", "dgop"]
-        running: false
-        onExited: exitCode => {
-                      dgopAvailable = (exitCode === 0)
-                      if (dgopAvailable) {
-                          initializeGpuMetadata()
-                          // Load persisted GPU PCI IDs from session state
-                          if (SessionData.enabledGpuPciIds
-                              && SessionData.enabledGpuPciIds.length > 0) {
-                              for (const pciId of SessionData.enabledGpuPciIds) {
-                                  addGpuPciId(pciId)
-                              }
-                              // Trigger update if we already have active modules
-                              if (refCount > 0 && enabledModules.length > 0) {
-                                  updateAllStats()
-                              }
-                          }
-                      } else {
-                          console.warn("dgop is not installed or not in PATH")
-                      }
-                  }
-    }
+    // Disabled osReleaseProcess to eliminate CPU usage
+    // Process {
+    //     id: osReleaseProcess
+    //     command: ["cat", "/etc/os-release"]
+    //     running: false
+    //     onExited: exitCode => {
+    //                   if (exitCode !== 0) {
+    //                       console.warn("Failed to read /etc/os-release")
+    //                   }
+    //               }
+    //     stdout: StdioCollector {
+    //         onStreamFinished: {
+    //             if (text.trim()) {
+    //                 try {
+    //                     const lines = text.trim().split('\n')
+    //                     let prettyName = ""
+    //                     let name = ""
 
-    Process {
-        id: osReleaseProcess
-        command: ["cat", "/etc/os-release"]
-        running: false
-        onExited: exitCode => {
-                      if (exitCode !== 0) {
-                          console.warn("Failed to read /etc/os-release")
-                      }
-                  }
-        stdout: StdioCollector {
-            onStreamFinished: {
-                if (text.trim()) {
-                    try {
-                        const lines = text.trim().split('\n')
-                        let prettyName = ""
-                        let name = ""
+    //                     for (const line of lines) {
+    //                         const trimmedLine = line.trim()
+    //                         if (trimmedLine.startsWith('PRETTY_NAME=')) {
+    //                             prettyName = trimmedLine.substring(12).replace(
+    //                                         /^["']|["']$/g, '')
+    //                         } else if (trimmedLine.startsWith('NAME=')) {
+    //                             name = trimmedLine.substring(5).replace(
+    //                                         /^["']|["']$/g, '')
+    //                         }
+    //                     }
 
-                        for (const line of lines) {
-                            const trimmedLine = line.trim()
-                            if (trimmedLine.startsWith('PRETTY_NAME=')) {
-                                prettyName = trimmedLine.substring(12).replace(
-                                            /^["']|["']$/g, '')
-                            } else if (trimmedLine.startsWith('NAME=')) {
-                                name = trimmedLine.substring(5).replace(
-                                            /^["']|["']$/g, '')
-                            }
-                        }
-
-                        // Prefer PRETTY_NAME, fallback to NAME
-                        const distroName = prettyName || name || "Linux"
-                        distribution = distroName
-                        console.log("Detected distribution:", distroName)
-                    } catch (e) {
-                        console.warn("Failed to parse /etc/os-release:", e)
-                        distribution = "Linux"
-                    }
-                }
-            }
-        }
-    }
+    //                     // Prefer PRETTY_NAME, fallback to NAME
+    //                     const distroName = prettyName || name || "Linux"
+    //                     distribution = distroName
+    //                     console.log("Detected distribution:", distroName)
+    //                 } catch (e) {
+    //                     console.warn("Failed to parse /etc/os-release:", e)
+    //                     distribution = "Linux"
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
 
     Component.onCompleted: {
-        dgopCheckProcess.running = true
-        osReleaseProcess.running = true
+        // Disabled to eliminate CPU usage
+        // dgopCheckProcess.running = true
+        // osReleaseProcess.running = true
     }
 }
