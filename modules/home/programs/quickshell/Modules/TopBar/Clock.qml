@@ -66,7 +66,7 @@ Rectangle {
     SystemClock {
         id: systemClock
 
-        precision: SystemClock.Seconds
+        precision: SystemClock.Minutes
         onDateChanged: root.currentDate = systemClock.date
     }
 

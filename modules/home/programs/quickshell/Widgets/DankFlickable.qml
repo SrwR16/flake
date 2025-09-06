@@ -144,7 +144,7 @@ Flickable {
 
     Timer {
         id: momentumTimer
-        interval: 16
+        interval: 16 // ~60 FPS
         repeat: true
 
         onTriggered: {

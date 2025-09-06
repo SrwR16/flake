@@ -23,10 +23,9 @@ Rectangle {
 
     readonly property int currentContentWidth: {
         // Calculate actual content width:
-        // AudioViz (20) + spacing + [text + spacing] + controls (prev:20 + spacing + play:24 + spacing + next:20) + padding
+        // [text + spacing] + controls (prev:20 + spacing + play:24 + spacing + next:20) + padding
         const controlsWidth = 20 + Theme.spacingXS + 24 + Theme.spacingXS + 20  // ~72px total
-        const audioVizWidth = 20
-        const contentWidth = audioVizWidth + Theme.spacingXS + controlsWidth
+        const contentWidth = controlsWidth
         return contentWidth + (textWidth > 0 ? textWidth + Theme.spacingXS : 0) + horizontalPadding * 2
     }
     property string section: "center"
@@ -108,9 +107,7 @@ Rectangle {
 
             spacing: Theme.spacingXS
 
-            AudioVisualization {
-                anchors.verticalCenter: parent.verticalCenter
-            }
+            // AudioVisualization removed to reduce CPU usage
 
             Rectangle {
                 id: textContainer
@@ -164,7 +161,7 @@ Rectangle {
                         id: scrollAnimation
                         running: mediaText.needsScrolling
                                  && textContainer.visible
-                        loops: Animation.Infinite
+                        loops: 1  // Single scroll cycle instead of infinite
 
                         PauseAnimation {
                             duration: 2000
@@ -188,6 +185,7 @@ Rectangle {
                         NumberAnimation {
                             target: mediaText
                             property: "scrollOffset"
+                            from: mediaText.implicitWidth - textContainer.width + 5
                             to: 0
                             duration: Math.max(
                                           1000,

@@ -225,22 +225,23 @@ PanelWindow {
                                        Theme.surfaceTint.b, 0.04)
                         radius: parent.radius
 
-                        SequentialAnimation on opacity {
-                            running: false
-                            loops: Animation.Infinite
-
-                            NumberAnimation {
-                                to: 0.08
-                                duration: Theme.extraLongDuration
-                                easing.type: Theme.standardEasing
-                            }
-
-                            NumberAnimation {
-                                to: 0.02
-                                duration: Theme.extraLongDuration
-                                easing.type: Theme.standardEasing
-                            }
-                        }
+                        // Disabled infinite animation to reduce CPU usage
+                        // SequentialAnimation on opacity {
+                        //     running: false
+                        //     loops: Animation.Infinite
+                        //
+                        //     NumberAnimation {
+                        //         to: 0.08
+                        //         duration: Theme.extraLongDuration
+                        //         easing.type: Theme.standardEasing
+                        //     }
+                        //
+                        //     NumberAnimation {
+                        //         to: 0.02
+                        //         duration: Theme.extraLongDuration
+                        //         easing.type: Theme.standardEasing
+                        //     }
+                        // }
                     }
 
                     layer.effect: MultiEffect {

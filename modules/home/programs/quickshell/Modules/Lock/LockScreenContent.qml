@@ -84,7 +84,7 @@ Item {
     SystemClock {
         id: systemClock
 
-        precision: SystemClock.Seconds
+        precision: SystemClock.Minutes
     }
 
     Rectangle {

@@ -93,7 +93,7 @@ Rectangle {
                     from: 0
                     to: 360
                     duration: 1000
-                    loops: Animation.Infinite
+                    loops: 1  // Single rotation instead of infinite
                 }
             }
 

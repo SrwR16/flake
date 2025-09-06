@@ -257,7 +257,11 @@ in
         * {
           font-family:
             "JetBrainsMono NF",
-            "Symbols Nerd Font";
+            "Symbols Nerd Font",
+            "Noto Sans Bengali",
+            "Noto Serif Bengali",
+            "Liberation Sans",
+            "DejaVu Sans";
           font-weight: bolder;
           font-size: 14px;
         }

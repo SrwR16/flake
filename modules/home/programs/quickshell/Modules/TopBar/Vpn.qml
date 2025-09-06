@@ -36,7 +36,7 @@ Rectangle {
 
         RotationAnimation on rotation {
             running: VpnService.isBusy
-            loops: Animation.Infinite
+            loops: 1  // Single rotation instead of infinite
             from: 0
             to: 360
             duration: 900

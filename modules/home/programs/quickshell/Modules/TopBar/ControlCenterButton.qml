@@ -54,10 +54,10 @@ Rectangle {
             }
             anchors.verticalCenter: parent.verticalCenter
             visible: root.showNetworkIcon
-            
+
             RotationAnimation on rotation {
                 running: NetworkService.wifiToggling
-                loops: Animation.Infinite
+                loops: 1  // Single rotation instead of infinite
                 from: 0
                 to: 360
                 duration: 1000
@@ -161,7 +161,7 @@ Rectangle {
                             relativeX, barHeight + Theme.spacingXS,
                             width, section, currentScreen)
             }
-            
+
             root.clicked()
         }
     }
