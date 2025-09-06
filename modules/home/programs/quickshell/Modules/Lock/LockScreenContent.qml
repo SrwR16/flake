@@ -455,7 +455,7 @@ Item {
                                 RotationAnimation on rotation {
                                     running: pam.active
                                              && !LockScreenService.unlocking
-                                    loops: Animation.Infinite
+                                    loops: 1  // Single rotation instead of infinite
                                     duration: Anims.durLong
                                     from: 0
                                     to: 360
