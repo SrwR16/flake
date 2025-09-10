@@ -1,6 +1,6 @@
 # 🚀 NixOS Configuration Migration Guide
 
-## From Flake Architecture to Enhanced bydmiller + meadow Integration
+## From Flake Architecture to Enhanced bydmiller Integration
 
 <div align="center">
 
@@ -19,7 +19,7 @@ _Professional architecture + Advanced DevOps + Modern technologies_
 | **Desktop Environment** | ✅ bydmiller complete      | Use Hyprland + AGS + Waybar       |
 | **Theming System**      | ✅ bydmiller comprehensive | Use their GTK + Material Design 3 |
 | **DevOps Tools**        | 🟡 Your setup superior     | **MIGRATE** your tools            |
-| **meadow Namespace**    | 🟡 Your system superior    | **MIGRATE** your architecture     |
+| **Configuration Style** | 🟡 Personal preference     | **OPTIONAL** - use standard NixOS |
 | **Zen Browser**         | 🟡 Unique value            | **OPTIONAL** - privacy focus      |
 | **Glance Dashboard**    | 🟡 DevOps enhancement      | **OPTIONAL** - monitoring tool    |
 
@@ -27,7 +27,7 @@ _Professional architecture + Advanced DevOps + Modern technologies_
 
 - **Enterprise Architecture**: bydmiller's role-based, flake-parts system with complete desktop environment (Hyprland + AGS/Waybar)
 - **Advanced DevOps**: Your cutting-edge container, k8s, IaC toolchain
-- **Flexible Framework**: Your meadow namespace for unlimited extensibility
+- **Standard Patterns**: Clean, maintainable NixOS configuration patterns
 - **Complementary Tools**: Privacy browser (Zen) and modern dashboard (Glance) that add unique value
 - **Professional Theming**: Complete Material Design 3 + GTK system (already included in bydmiller)
 
@@ -81,127 +81,9 @@ find . -name "*.nix" -path "*/services/*" | head -20
 
 ## �️ Phase 1: Foundation Integration
 
-### 1.1 🧠 meadow Library Enhancement
+### 1.1 📦 Package Configuration Integration
 
-**File**: `flake-parts/lib/modules.nix`
-
-_Add your meadow functions after the existing mkService function:_
-
-```nix
-# Enhanced meadow namespace system
-meadow = rec {
-  # Core imports
-  inherit (lib.modules) mkIf mkMerge mkDefault mkForce;
-  inherit (lib.lists) all unique concatLists head tail isList last;
-  inherit (lib.attrsets) zipAttrsWith isAttrs mapAttrs filterAttrs;
-  inherit (lib.strings) hasPrefix;
-
-  # Conditional logic helper
-  mkIfElse = p: yes: no: mkMerge [
-    (mkIf p yes)
-    (mkIf (!p) no)
-  ];
-
-  # Directory discovery and module loading
-  readSubdirs = basePath:
-    let
-      entries = builtins.readDir basePath;
-      dirs = builtins.attrNames (filterAttrs (_: type: type == "directory") entries);
-    in
-    map (d: basePath + "/${d}") dirs;
-
-  # Deep attribute merging with smart conflict resolution
-  recursiveMerge = attrList:
-    let
-      f = attrPath:
-        zipAttrsWith (
-          n: values:
-          if tail values == [ ] then
-            head values
-          else if all isList values then
-            unique (concatLists values)
-          else if all isAttrs values then
-            f (attrPath ++ [ n ]) values
-          else
-            last values
-        );
-    in
-    f [ ] attrList;
-
-  # Bulk module enablement
-  enableModules = moduleNames:
-    builtins.listToAttrs (
-      builtins.map (m: {
-        name = m;
-        value = { enable = true; };
-      }) moduleNames
-    );
-
-  # Advanced enablement with options
-  enableModulesWithOptions = moduleConfigs:
-    builtins.listToAttrs (
-      builtins.map (cfg: {
-        name = cfg.name;
-        value = { enable = true; } // (cfg.options or {});
-      }) moduleConfigs
-    );
-
-  # Hierarchical attribute flattening
-  flattenAttrs = prefix: delim: attrs:
-    builtins.concatLists (
-      builtins.attrValues (
-        mapAttrs (
-          key: value:
-          let
-            newPrefix = if prefix == "" then key else "${prefix}${delim}${key}";
-          in
-          if builtins.isAttrs value then flattenAttrs newPrefix delim value else [ newPrefix ]
-        ) attrs
-      )
-    );
-
-  # YAML processing utilities
-  fromYAML = yaml:
-    let
-      output = pkgs.runCommand "from-yaml"
-        {
-          inherit yaml;
-          allowSubstitutes = false;
-          preferLocalBuild = true;
-        }
-        ''
-          ${pkgs.remarshal}/bin/remarshal \
-            -if yaml \
-            -i <(echo "$yaml") \
-            -of json \
-            -o $out
-        '';
-    in
-    builtins.fromJSON (builtins.readFile output);
-
-  readYAML = path: fromYAML (builtins.readFile path);
-
-  # Configuration profile management
-  loadProfile = profileName: basePath:
-    let
-      profilePath = basePath + "/${profileName}";
-      profileExists = builtins.pathExists profilePath;
-    in
-    if profileExists then import profilePath else {};
-
-  # Feature flag system
-  withFeatures = features: config:
-    mkMerge (
-      builtins.map (feature:
-        mkIf (builtins.elem feature features) config.${feature}
-      ) (builtins.attrNames config)
-    );
-
-  # Environment-aware configuration
-  forEnvironment = env: configs:
-    configs.${env} or configs.default or {};
-};
-```
+**Note**: We'll use standard NixOS configuration patterns instead of custom abstractions for better maintainability and community compatibility.
 
 ### 1.2 🔗 Enhanced Input Management
 
@@ -1270,7 +1152,7 @@ in {
 
 ## �️ Phase 4: Machine Configuration Integration
 
-### 4.1 🖥️ Host Definition with meadow
+### 4.1 🖥️ Host Definition
 
 **File**: `machines/aurelionite/default.nix`
 
@@ -1282,7 +1164,6 @@ in {
 }: let
   inherit (inputs.nixpkgs.lib) nixosSystem;
   inherit (inputs) self;
-  inherit (lib) meadow;
 
   specialArgs = {
     inherit inputs self;
@@ -1298,7 +1179,7 @@ in {
       ./home.nix
       self.nixosModules.base-workstation
 
-      # Enhanced configuration with meadow
+      # Enhanced configuration
       {
         modules = {
           device = {
@@ -1318,11 +1199,15 @@ in {
             hashedPassword = "$y$j9T$..."; # Use your actual password hash
           };
 
-          # System services
-          services = meadow.enableModules [
-            "openssh" "tailscale" "docker" "bluetooth"
-            "pipewire" "networkmanager" "udev"
-          ];
+          # System services - Standard NixOS approach
+          services = {
+            openssh.enable = true;
+            tailscale.enable = true;
+            docker.enable = true;
+            bluetooth.enable = true;
+            pipewire.enable = true;
+            networkmanager.enable = true;
+          };
 
           # Desktop environment
           desktop = {
@@ -1368,7 +1253,6 @@ in {
   ...
 }: let
   inherit (self) inputs;
-  inherit (lib) meadow;
 
   specialArgs = {inherit inputs self;};
 in {
@@ -1392,43 +1276,49 @@ in {
         stateVersion = "24.05";
       };
 
-      # meadow-powered configuration
+      # Standard NixOS configuration
       modules.home = {
-        # DevOps Excellence
-        programs = meadow.enableModulesWithOptions [
-          { name = "k9s"; options = { theme = "rose-pine"; }; }
-          { name = "yamlfmt"; options = {}; }
-          { name = "yamllint"; options = {}; }
-          { name = "devops-containers"; options = {}; }
-          { name = "devops-iac"; options = {}; }
+        # DevOps Excellence - Standard NixOS approach
+        programs = {
+          # DevOps Tools
+          k9s = {
+            enable = true;
+            theme = "rose-pine";
+          };
+          yamlfmt.enable = true;
+          yamllint.enable = true;
+          devops-containers.enable = true;
+          devops-iac.enable = true;
 
           # Modern Technologies (only complementary tools)
-          { name = "zen-browser"; options = {}; }
-          { name = "glance"; options = {
+          zen-browser.enable = true;
+          glance = {
+            enable = true;
             port = 8080;
             settings.theme.primary-color = "217 92 83";
-          }; }
+          };
 
           # Development Environment
-          { name = "git"; options = {
+          git = {
+            enable = true;
             userName = "SrwR16";
             userEmail = "your.email@domain.com";
-          }; }
-          { name = "vscode"; options = {}; }
-          { name = "lazygit"; options = {}; }
+          };
+          vscode.enable = true;
+          lazygit.enable = true;
 
           # Enhanced Terminal Experience
-          { name = "kitty"; options = {}; }
-          { name = "alacritty"; options = {}; }
-          { name = "fish"; options = {}; }
-          { name = "starship"; options = {}; }
+          kitty.enable = true;
+          alacritty.enable = true;
+          fish.enable = true;
+          starship.enable = true;
 
           # Media and Communication
-          { name = "firefox"; options = {}; }
-          { name = "discord"; options = {}; }
-          { name = "spotify"; options = {}; }
-          { name = "mpv"; options = {}; }
-        ];
+          firefox.enable = true;
+          discord.enable = true;
+          spotify.enable = true;
+          mpv.enable = true;
+        };
 
         # Enhanced style configuration
         style = {
@@ -1500,10 +1390,12 @@ in {
           };
         };
 
-        # Service configuration
-        services = meadow.enableModules [
-          "gpg-agent" "keybase" "syncthing"
-        ];
+        # Service configuration - Standard NixOS approach
+        services = {
+          gpg-agent.enable = true;
+          keybase.enable = true;
+          syncthing.enable = true;
+        };
       };
 
       programs.home-manager.enable = true;
@@ -1670,7 +1562,7 @@ fish -c "alias | grep -E '(k|tf|dc)='"
 
 | Component       | Status | Validation Command                  |
 | --------------- | ------ | ----------------------------------- |
-| meadow Library  | ✅     | `nix repl -f . -c lib.meadow`       |
+| Standard Config | ✅     | `nix-instantiate --eval flake.nix`  |
 | DevOps Tools    | ✅     | `k9s version && terraform version`  |
 | Container Stack | ✅     | `docker ps && kubectl cluster-info` |
 | Browser Setup   | ✅     | `zen-browser --version`             |
@@ -2048,9 +1940,8 @@ pages:
    - Zen browser configured
    - Glance dashboard accessible
 
-5. **meadow Architecture**
-   - Library functions available
-   - Configuration system working
+5. **Configuration Architecture**
+   - Standard NixOS patterns working
    - Module system operational
    - Extensions functioning
 
@@ -2193,9 +2084,8 @@ home-manager generations
 
 ### 🔮 Future Improvements
 
-1. **Enhanced meadow System**
+1. **Enhanced Configuration System**
 
-   - Add more helper functions
    - Create configuration templates
    - Implement validation systems
    - Build extension mechanisms
