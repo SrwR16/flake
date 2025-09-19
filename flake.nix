@@ -39,7 +39,7 @@
               home-manager.extraSpecialArgs = {
                 inherit inputs outputs lib;
               };
-              home-manager.users.sarw.imports = [ userConfigs ];
+              home-manager.users.xi.imports = [ userConfigs ];
             }
           ];
         };

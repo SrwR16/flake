@@ -8,8 +8,8 @@
   meadow.style.wallpaper = "${inputs.self}/home/shared/walls/${config.meadow.style.theme}.jpg";
 
   home = {
-    username = "sarw";
-    homeDirectory = "/home/sarw";
+    username = "xi";
+    homeDirectory = "/home/xi";
     stateVersion = "24.11";
 
     packages = with pkgs; [

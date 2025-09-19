@@ -11,7 +11,7 @@ in
   options.meadow.impermanence.enable = mkEnableOption "impermanence";
   config = mkIf cfg.enable {
     users = {
-      users.sarw = {
+      users.xi = {
         hashedPasswordFile = "/persist/passwords/user";
         uid = 1000;
       };

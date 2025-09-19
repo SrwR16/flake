@@ -1,20 +1,20 @@
 ---
 keys:
-  - &sarw age1shq5l6awqwwtalrqreck3reuwyttnu0vq52g9ntq6wfwpq3afcpsae8dc8
+  - &xi age1shq5l6awqwwtalrqreck3reuwyttnu0vq52g9ntq6wfwpq3afcpsae8dc8
   - &mithrix age1sklfnht5lgc9psmrzrujapfhyclzc72argvk4hya67u3cdtag58smg0vhq
 creation_rules:
-  - path_regex: secrets/sarw/[^/]+\.(yaml|json|env|ini)$
+  - path_regex: secrets/xi/[^/]+\.(yaml|json|env|ini)$
     key_groups:
       - age:
-          - *sarw
+          - *xi
   - path_regex: secrets/aurelionite/[^/]+\.(yaml|json|env|ini)$
     key_groups:
       - age:
-          - *sarw
+          - *xi
   - path_regex: secrets/grovetender/[^/]+\.(yaml|json|env|ini)$
     key_groups:
       - age:
-          - *sarw
+          - *xi
   - path_regex: secrets/mithrix/[^/]+\.(yaml|json|env|ini)$
     key_groups:
       - age:

@@ -24,7 +24,7 @@ set sys_generations (sudo nix-env --list-generations -p /nix/var/nix/profiles/sy
 # Count flake inputs in common directories
 set flake_inputs_count 0
 set flake_dirs
-for dir in /home/sarw/flake/.direnv /home/sarw/Programming/astal-bar/.direnv ~/.cache/direnv
+for dir in /home/xi/flake/.direnv /home/xi/Programming/astal-bar/.direnv ~/.cache/direnv
     if test -d $dir/flake-inputs
         set dir_count (find $dir/flake-inputs -mindepth 1 -maxdepth 1 -type d 2>/dev/null | wc -l)
         set flake_inputs_count (math $flake_inputs_count + $dir_count)
