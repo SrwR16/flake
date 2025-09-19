@@ -16,7 +16,7 @@ in
     };
 
     home.sessionVariables = {
-      STRUKTUR_PATH = "/home/sarw/workspace/rf/struktur/k8s";
+      STRUKTUR_PATH = "/home/xi/workspace/rf/struktur/k8s";
     };
     home.packages = with pkgs; [ figlet ];
 

@@ -40,11 +40,11 @@ _Professional architecture + Advanced DevOps + Modern technologies_
 ```bash
 # Create timestamped backup
 export BACKUP_DATE=$(date +%Y%m%d_%H%M%S)
-cp -r /home/sarw/flake /home/sarw/flake-backup-$BACKUP_DATE
+cp -r /home/xi/flake /home/xi/flake-backup-$BACKUP_DATE
 
 # Export current system state
 nixos-rebuild dry-build --flake .#aurelionite 2>&1 | tee current-system-$BACKUP_DATE.log
-home-manager build --flake .#sarw@aurelionite 2>&1 | tee current-home-$BACKUP_DATE.log
+home-manager build --flake .#xi@aurelionite 2>&1 | tee current-home-$BACKUP_DATE.log
 
 # Document current package list
 nix-env -qa > current-packages-$BACKUP_DATE.txt
@@ -57,12 +57,12 @@ nix-env -qa > current-packages-$BACKUP_DATE.txt
 nix-shell -p gh git nixpkgs-fmt statix
 
 # Fork and clone bydmiller's repository
-gh repo fork bydmiller/nixos-configs sarw/nixos-configs
-git clone https://github.com/sarw/nixos-configs.git bydmiller-enhanced
+gh repo fork bydmiller/nixos-configs xi/nixos-configs
+git clone https://github.com/xi/nixos-configs.git bydmiller-enhanced
 cd bydmiller-enhanced
 
 # Set up development branch
-git checkout -b feature/sarw-integration
+git checkout -b feature/xi-integration
 ```
 
 ### 3. 📊 Analysis Verification
@@ -1193,7 +1193,7 @@ in {
 
           # User configuration
           user = {
-            name = "sarw";
+            name = "xi";
             description = "Software Engineer & DevOps Specialist";
             extraGroups = ["wheel" "docker" "networkmanager" "video" "audio"];
             hashedPassword = "$y$j9T$..."; # Use your actual password hash
@@ -1263,7 +1263,7 @@ in {
     backupFileExtension = "hm.backup";
     extraSpecialArgs = specialArgs;
 
-    users.sarw = {
+    users.xi = {
       imports = [
         ../../homes/shared
         ../../modules/exclusive/home-manager
@@ -1271,8 +1271,8 @@ in {
       ];
 
       home = {
-        username = "sarw";
-        homeDirectory = "/home/sarw";
+        username = "xi";
+        homeDirectory = "/home/xi";
         stateVersion = "24.05";
       };
 
@@ -1506,7 +1506,7 @@ nix flake check --verbose
 nixos-rebuild build --flake .#aurelionite --dry-run
 
 # Test home-manager build
-home-manager build --flake .#sarw@aurelionite --dry-run
+home-manager build --flake .#xi@aurelionite --dry-run
 
 # Verify all programs are available
 nix-env -qa | grep -E "(k9s|yamlfmt|yamllint|terraform|kubectl)"
@@ -1580,7 +1580,7 @@ fish -c "alias | grep -E '(k|tf|dc)='"
 
 ```bash
 # Create recovery point
-sudo nixos-rebuild build --flake /home/sarw/flake#aurelionite
+sudo nixos-rebuild build --flake /home/xi/flake#aurelionite
 sudo cp /run/current-system /run/backup-system-$(date +%Y%m%d)
 
 # Switch to new configuration
@@ -1595,11 +1595,11 @@ sudo reboot
 
 ```bash
 # Backup current home-manager generation
-home-manager build --flake /home/sarw/flake#sarw@aurelionite
+home-manager build --flake /home/xi/flake#xi@aurelionite
 cp -r ~/.local/state/nix/profiles/home-manager ~/hm-backup-$(date +%Y%m%d)
 
 # Apply new home configuration
-home-manager switch --flake .#sarw@aurelionite
+home-manager switch --flake .#xi@aurelionite
 
 # Restart user services
 systemctl --user daemon-reload
@@ -2018,7 +2018,7 @@ home-manager remove-generations 7d
 home-manager news
 
 # Force rebuild
-home-manager switch --flake .#sarw@aurelionite --verbose
+home-manager switch --flake .#xi@aurelionite --verbose
 ```
 
 **4. Theme/Display Issues**

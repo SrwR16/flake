@@ -86,7 +86,7 @@ in
           };
 
           "image" = {
-            path = "/home/sarw/flake/modules/home/services/waybar/icon.png";
+            path = "/home/xi/flake/modules/home/services/waybar/icon.png";
             size = 24;
             interval = 5;
           };
