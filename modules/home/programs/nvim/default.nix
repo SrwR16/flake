@@ -1,7 +1,7 @@
 { inputs, ... }:
 let
-  inherit (inputs.neovim.packages."x86_64-linux") neovim;
+  inherit (inputs.neovim.packages."x86_64-linux") nvim;
 in
 {
-  home.packages = [ neovim ];
+  home.packages = [ nvim ];
 }

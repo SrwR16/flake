@@ -8,30 +8,54 @@
   programs = {
     git = {
       enable = true;
-      userEmail = "sarrwar16@gmail.com";
-      userName = "SrwR16";
-
+      
       ignores = [
         "*.log"
         ".envrc"
         "shell.nix"
       ];
+      
+      settings = {
+        user = {
+          email = "sarrwar16@gmail.com";
+          name = "SrwR16";
+          signingkey = "~/.ssh/id_default.pub";
+        };
+        
+        alias = {
+          st = "status ";
+          ci = "commit ";
+          br = "branch ";
+          co = "checkout ";
+          df = "diff ";
+          dc = "diff - -cached ";
+          lg = "log - p ";
+          pr = "pull - -rebase ";
+          p = "push ";
+          ppr = "push - -set-upstream origin ";
+          lol = "log - -graph - -decorate - -pretty=oneline --abbrev-commit";
+          lola = "log --graph --decorate --pretty=oneline --abbrev-commit --all";
+          latest = "for-each-ref --sort=-taggerdate --format='%(refname:short)' --count=1";
+          undo = "git reset --soft HEAD^";
+          brd = "branch -D";
+        };
 
-      extraConfig = {
         url = {
           "ssh://git@gitlab.dnm.radiofrance.fr:" = {
             insteadOf = "https://gitlab.dnm.radiofrance.fr/";
           };
         };
+        
         # Sign all commits using ssh key
         commit.gpgsign = true;
         gpg.format = "ssh";
-        user.signingkey = "~/.ssh/id_default.pub";
+        
         core = {
           editor = "nvim";
           excludesfile = "~/.config/git/ignore";
           pager = "${lib.getExe pkgs.diff-so-fancy}";
         };
+        
         pager = {
           diff = "${lib.getExe pkgs.diff-so-fancy}";
           log = "delta";
@@ -71,24 +95,6 @@
             nobranch = "white";
           };
         };
-      };
-
-      aliases = {
-        st = "status ";
-        ci = "commit ";
-        br = "branch ";
-        co = "checkout ";
-        df = "diff ";
-        dc = "diff - -cached ";
-        lg = "log - p ";
-        pr = "pull - -rebase ";
-        p = "push ";
-        ppr = "push - -set-upstream origin ";
-        lol = "log - -graph - -decorate - -pretty=oneline --abbrev-commit";
-        lola = "log --graph --decorate --pretty=oneline --abbrev-commit --all";
-        latest = "for-each-ref --sort=-taggerdate --format='%(refname:short)' --count=1";
-        undo = "git reset --soft HEAD^";
-        brd = "branch -D";
       };
     };
 
