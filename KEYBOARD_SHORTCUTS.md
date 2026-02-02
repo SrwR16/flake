@@ -90,7 +90,7 @@ Keyboard remapping configuration at the system level. Currently configured with 
 
 Each configuration file is written in Nix and follows the respective application's configuration format:
 - Hyprland uses Nix attribute sets for `bind`, `binde`, `bindr`, and `bindm`
-- Niri uses KDL (KDL Document Language) format embedded in Nix
+- Niri uses KDL (Document Language) format embedded in Nix
 - SwayFX uses Nix attribute sets for keybindings
 - Terminal and application configs use their respective formats
 
